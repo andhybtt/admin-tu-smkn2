@@ -1,0 +1,85 @@
+version: '3.8'
+
+# ==============================================================================
+# Dokploy Docker Compose: SIM Administrasi Guru (Laravel + MySQL)
+# ==============================================================================
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: administrasi_guru_app
+    restart: unless-stopped
+    expose:
+      - 80
+    environment:
+      - APP_NAME=${APP_NAME:-SIM Administrasi Guru}
+      - APP_ENV=${APP_ENV:-production}
+      - APP_DEBUG=${APP_DEBUG:-false}
+      - APP_KEY=${APP_KEY:-}
+      - APP_URL=${APP_URL:-http://localhost}
+      - APP_TIMEZONE=Asia/Jakarta
+      - APP_LOCALE=id
+      - APP_FALLBACK_LOCALE=id
+      
+      # Database Configuration
+      - DB_CONNECTION=mysql
+      - DB_HOST=${DB_HOST:-db}
+      - DB_PORT=${DB_PORT:-3306}
+      - DB_DATABASE=${DB_DATABASE:-db_administrasi_guru}
+      - DB_USERNAME=${DB_USERNAME:-${DB_USER:-root}}
+      - DB_PASSWORD=${DB_PASSWORD:-rootpassword}
+      
+      # Drivers
+      - SESSION_DRIVER=file
+      - SESSION_LIFETIME=120
+      - CACHE_STORE=file
+      - QUEUE_CONNECTION=sync
+      - FILESYSTEM_DISK=local
+    volumes:
+      - app_storage:/var/www/html/laravel_app/storage
+      - app_uploads:/var/www/html/laravel_app/public/uploads
+      - legacy_uploads:/var/www/html/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      dokploy-network:
+        aliases:
+          - app
+          - administrasi_guru_app
+
+  db:
+    image: mysql:8.0
+    container_name: administrasi_guru_db
+    restart: unless-stopped
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    environment:
+      - MYSQL_DATABASE=${DB_DATABASE:-db_administrasi_guru}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD:-rootpassword}
+      - MYSQL_ROOT_HOST=%
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./database/db_administrasi_guru.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 15s
+    networks:
+      dokploy-network:
+        aliases:
+          - db
+          - administrasi_guru_db
+
+volumes:
+  db_data:
+  app_storage:
+  app_uploads:
+  legacy_uploads:
+
+networks:
+  dokploy-network:
+    external: true

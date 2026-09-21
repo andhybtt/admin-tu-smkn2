@@ -1,0 +1,16 @@
+.git
+.gitignore
+.dockerignore
+.agents
+.gemini
+*.log
+*.tmp
+*.bak
+docker-compose.yml
+Dockerfile
+legacy_php_native
+*.sql
+*.docx
+CHANGELOG.md
+GIT_WORKFLOW.md
+powershell.bat

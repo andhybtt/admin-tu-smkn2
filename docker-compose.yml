@@ -1,0 +1,102 @@
+version: '3.8'
+
+# ==============================================================================
+# Dokploy Docker Compose: SIM Administrasi TU SMKN Karanganyar
+# Arsitektur Dual-Network Anti-Konflik IP & Database Terisolasi
+# ==============================================================================
+
+services:
+  # ----------------------------------------------------------------------------
+  # Service 1: Aplikasi Web TU (Laravel 11 + Livewire 3 + Apache PHP 8.2)
+  # ----------------------------------------------------------------------------
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tu_smkn_app
+    restart: unless-stopped
+    expose:
+      - 80
+    ports:
+      # Port mapping untuk pengujian lokal (opsional di Dokploy)
+      - "${APP_PORT:-8080}:80"
+    environment:
+      - APP_NAME=${APP_NAME:-SIM TU SMKN Karanganyar}
+      - APP_ENV=${APP_ENV:-production}
+      - APP_DEBUG=${APP_DEBUG:-false}
+      - APP_KEY=${APP_KEY:-}
+      - APP_URL=${APP_URL:-http://localhost}
+      - APP_TIMEZONE=Asia/Jakarta
+      - APP_LOCALE=id
+      - APP_FALLBACK_LOCALE=id
+      
+      # Database Configuration (Mengarah ke hostname unik db_tu_smkn)
+      - DB_CONNECTION=mysql
+      - DB_HOST=db_tu_smkn
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE:-tu_smkn_karanganyar}
+      - DB_USERNAME=${DB_USERNAME:-tu_user}
+      - DB_PASSWORD=${DB_PASSWORD:-PasswordDatabaseTu123!}
+      
+      # Storage & Cache Driver
+      - SESSION_DRIVER=file
+      - SESSION_LIFETIME=120
+      - CACHE_STORE=file
+      - QUEUE_CONNECTION=sync
+      - FILESYSTEM_DISK=public
+    volumes:
+      # Persistent volume untuk berkas arsip scan dokumen fisik TU
+      - app_storage:/var/www/html/storage/app/public
+    depends_on:
+      db_tu_smkn:
+        condition: service_healthy
+    networks:
+      - dokploy-network   # Jalur routing Dokploy Traefik (Domain & SSL)
+      - tu_internal_net  # Jalur privat ke Database (Terisolasi dari project lain)
+
+  # ----------------------------------------------------------------------------
+  # Service 2: Database Server (MariaDB 10.11 LTS)
+  # Menggunakan service name unik 'db_tu_smkn' agar kebal bentrok DNS Dokploy
+  # ----------------------------------------------------------------------------
+  db_tu_smkn:
+    image: mariadb:10.11
+    container_name: tu_smkn_db
+    restart: unless-stopped
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-PasswordRootTuKuat123!}
+      MYSQL_DATABASE: ${DB_DATABASE:-tu_smkn_karanganyar}
+      MYSQL_USER: ${DB_USERNAME:-tu_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-PasswordDatabaseTu123!}
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    networks:
+      - tu_internal_net  # HANYA terhubung ke network privat (Aman dari luar)
+
+# ------------------------------------------------------------------------------
+# Storage Volumes
+# ------------------------------------------------------------------------------
+volumes:
+  db_data:
+    name: tu_smkn_db_data
+  app_storage:
+    name: tu_smkn_app_storage
+
+# ------------------------------------------------------------------------------
+# Networks
+# ------------------------------------------------------------------------------
+networks:
+  # Network Dokploy bersama untuk reverse proxy Traefik
+  dokploy-network:
+    external: true
+
+  # Network privat khusus project ini: menjamin koneksi DB tidak salah IP
+  tu_internal_net:
+    name: tu_smkn_internal_network
+    driver: bridge
