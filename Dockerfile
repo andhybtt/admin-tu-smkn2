@@ -82,16 +82,18 @@ COPY . /var/www/html/
 # 8. Salin hasil kompilasi Vite dari Stage 1
 COPY --from=frontend-builder /app/public/build /var/www/html/public/build
 
-# 9. Install dependensi Composer (Production mode, tanpa dev package)
+# 9. Pastikan direktori cache ada sebelum instalasi composer
+RUN mkdir -p /var/www/html/bootstrap/cache
+
+# 10. Install dependensi Composer (Production mode, tanpa dev package)
 RUN composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader --no-ansi
 
-# 10. Konfigurasi Direktori Penyimpanan & Hak Akses
+# 10.1. Konfigurasi Direktori Penyimpanan & Hak Akses
 RUN mkdir -p /var/www/html/storage/framework/cache/data \
              /var/www/html/storage/framework/sessions \
              /var/www/html/storage/framework/views \
              /var/www/html/storage/logs \
              /var/www/html/storage/app/public \
-             /var/www/html/bootstrap/cache \
     && chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
