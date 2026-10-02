@@ -135,16 +135,23 @@
             </nav>
 
             <!-- Profil Staf TU -->
-            <div class="border-t border-slate-100 p-3">
+            <div class="border-t border-slate-100 p-3 space-y-2">
                 <div class="flex items-center gap-3 rounded-xl bg-slate-50 p-2.5 border border-slate-100">
                     <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-700 font-bold text-xs">
-                        TU
+                        {{ strtoupper(substr(auth()->user()->role ?? 'U', 0, 2)) }}
                     </div>
                     <div class="min-w-0 flex-1">
                         <p class="truncate text-xs font-semibold text-slate-800">{{ auth()->user()->name ?? 'Guest' }}</p>
-                        <p class="truncate text-[10px] text-slate-400 capitalize">{{ auth()->user()->role ?? 'Unknown' }}</p>
+                        <p class="truncate text-[10px] text-slate-400 capitalize">{{ str_replace('_', ' ', auth()->user()->role ?? 'Unknown') }}</p>
                     </div>
                 </div>
+                <form method="POST" action="{{ route('logout') }}" class="w-full">
+                    @csrf
+                    <button type="submit" class="flex w-full items-center justify-center gap-2 rounded-xl bg-red-50 p-2.5 text-xs font-bold text-red-600 transition hover:bg-red-100 hover:text-red-700 border border-red-100/50 shadow-sm active:scale-95">
+                        <x-lucide-log-out class="h-4 w-4" />
+                        <span>Keluar Sistem</span>
+                    </button>
+                </form>
             </div>
         </aside>
 
@@ -169,18 +176,10 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-3">
-                    <span class="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700 border border-emerald-200/50">
+                    <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700 border border-emerald-200/50">
                         <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                         Livewire SPA
                     </span>
-                    <div class="h-6 w-px bg-slate-200 hidden sm:block"></div>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="flex items-center gap-1.5 rounded-lg bg-red-50 px-3 py-1.5 text-xs font-bold text-red-600 transition hover:bg-red-100 hover:text-red-700 border border-red-100/50">
-                            <x-lucide-log-out class="h-4 w-4" />
-                            <span>Keluar</span>
-                        </button>
-                    </form>
                 </div>
             </header>
 
