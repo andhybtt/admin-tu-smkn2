@@ -74,19 +74,35 @@
 
                 @if(auth()->check() && auth()->user()->role === 'subyek')
                 <div class="pt-4 pb-1">
-                    <p class="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-400">Layanan Siswa</p>
+                    <p class="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-400">Identitas & Akademik</p>
+                </div>
+                <a href="#" class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition text-slate-600 hover:bg-slate-100">
+                    <x-lucide-user class="h-5 w-5" />
+                    <span>Profil Saya (Buku Induk)</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition text-slate-600 hover:bg-slate-100">
+                    <x-lucide-wallet class="h-5 w-5" />
+                    <span>Keuangan & Beasiswa</span>
+                </a>
+
+                <div class="pt-4 pb-1">
+                    <p class="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-400">Administrasi & Surat</p>
                 </div>
                 <a href="#" class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition text-slate-600 hover:bg-slate-100">
                     <x-lucide-file-text class="h-5 w-5" />
-                    <span>Permohonan Surat</span>
+                    <span>Minta Surat Keterangan</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition text-slate-600 hover:bg-slate-100">
+                    <x-lucide-briefcase class="h-5 w-5" />
+                    <span>Pengurusan Izin PKL</span>
                 </a>
                 <a href="#" class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition text-slate-600 hover:bg-slate-100">
                     <x-lucide-award class="h-5 w-5" />
-                    <span>Legalisir Online</span>
+                    <span>Legalisir & SKPI</span>
                 </a>
                 <a href="#" class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition text-slate-600 hover:bg-slate-100">
-                    <x-lucide-user class="h-5 w-5" />
-                    <span>Profil Siswa</span>
+                    <x-lucide-graduation-cap class="h-5 w-5" />
+                    <span>Tracer Study BKK</span>
                 </a>
                 @else
                 <div class="pt-4 pb-1">
