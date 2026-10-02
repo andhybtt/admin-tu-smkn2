@@ -91,7 +91,7 @@ RUN mkdir -p /var/www/html/bootstrap/cache
 # 10. Install dependensi Composer (Production mode, tanpa dev package)
 ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV COMPOSER_MEMORY_LIMIT=-1
-RUN composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader --no-ansi
+RUN composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader --no-ansi --no-scripts
 
 # 10.1. Konfigurasi Direktori Penyimpanan & Hak Akses
 RUN mkdir -p /var/www/html/storage/framework/cache/data \

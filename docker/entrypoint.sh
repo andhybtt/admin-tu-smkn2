@@ -68,6 +68,8 @@ if [ -n "$DB_HOST" ] && [ "$DB_HOST" != "127.0.0.1" ]; then
     done
     if [ $counter -lt $max_retries ]; then
         echo "✅ Terhubung ke database PostgreSQL dengan sukses!"
+        echo "🔄 Menjalankan Laravel package:discover..."
+        php artisan package:discover --ansi || true
         echo "📦 Menjalankan migrasi database..."
         php artisan migrate --force --no-interaction || true
         echo "🌱 Menjalankan seeder database (demo data)..."
