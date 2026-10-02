@@ -29,5 +29,10 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme('https');
             URL::forceRootUrl(env('APP_URL', 'https://simtu.sknddev.com'));
         }
+
+        // Force disable ASSET_URL to prevent Vite from generating broken protocol-relative URLs (//build/assets...)
+        config(['app.asset_url' => null]);
+        putenv('ASSET_URL=');
+        unset($_SERVER['ASSET_URL'], $_ENV['ASSET_URL']);
     }
 }

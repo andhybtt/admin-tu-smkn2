@@ -133,8 +133,9 @@
                     </div>
                     <form method="POST" action="{{ route('logout') }}" class="shrink-0">
                         @csrf
-                        <button type="submit" class="p-2 text-slate-400 hover:text-red-600 transition" title="Logout">
+                        <button type="submit" class="flex items-center gap-1 p-2 text-red-500 hover:text-red-700 font-bold transition rounded-lg hover:bg-red-50 border border-transparent hover:border-red-100" title="Logout">
                             <x-lucide-log-out class="h-4 w-4" />
+                            <span class="text-xs uppercase tracking-wider">Keluar</span>
                         </button>
                     </form>
                 </div>
@@ -191,10 +192,13 @@
             <x-lucide-award class="h-5 w-5" />
             <span>Legalisir</span>
         </a>
-        <a href="#" class="flex flex-col items-center gap-1 text-[10px] text-slate-500">
-            <x-lucide-user class="h-5 w-5" />
-            <span>Profil</span>
-        </a>
+        <form method="POST" action="{{ route('logout') }}" class="flex flex-col items-center justify-center">
+            @csrf
+            <button type="submit" class="flex flex-col items-center gap-1 text-[10px] text-red-500 font-bold">
+                <x-lucide-log-out class="h-5 w-5" />
+                <span>Keluar</span>
+            </button>
+        </form>
         @else
         <a href="{{ route('persuratan.masuk') }}" wire:navigate.hover class="flex flex-col items-center gap-1 text-[10px] {{ request()->routeIs('persuratan.masuk*') ? 'text-blue-600 font-bold' : 'text-slate-500' }}">
             <x-lucide-inbox class="h-5 w-5" />
