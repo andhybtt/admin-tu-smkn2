@@ -7,3 +7,10 @@
         -webkit-tap-highlight-color: transparent;
     }
 }
+
+@layer components {
+    /* Perbaikan: Beri ukuran default untuk ikon lucide agar tidak terlalu besar */
+    svg.lucide {
+        @apply w-5 h-5 inline-block;
+    }
+}

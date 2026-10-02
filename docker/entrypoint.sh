@@ -29,6 +29,10 @@ fi
 # 3. Generate APP_KEY jika belum ada di environment
 if [ -z "$APP_KEY" ]; then
     echo "🔑 APP_KEY belum terdeteksi, menghasilkan application key baru..."
+    if [ ! -f .env ]; then
+        echo "📄 File .env tidak ditemukan, menyalin dari .env.example..."
+        cp .env.example .env || touch .env
+    fi
     php artisan key:generate --force --no-interaction
 fi
 
