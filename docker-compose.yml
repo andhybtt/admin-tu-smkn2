@@ -66,7 +66,7 @@ services:
       POSTGRES_USER: ${DB_USERNAME:-tu_user}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-PasswordDatabaseTu123!}
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - pg_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-tu_user} -d ${DB_DATABASE:-tu_smkn_karanganyar}"]
       interval: 10s
@@ -80,8 +80,8 @@ services:
 # Storage Volumes
 # ------------------------------------------------------------------------------
 volumes:
-  db_data:
-    name: tu_smkn_db_data
+  pg_data:
+    name: tu_smkn_pg_data
   app_storage:
     name: tu_smkn_app_storage
 
