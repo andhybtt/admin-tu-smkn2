@@ -23,7 +23,6 @@ services:
       - APP_DEBUG=${APP_DEBUG:-false}
       - APP_KEY=${APP_KEY:-}
       - APP_URL=${APP_URL:-https://simtu.sknddev.com}
-      - ASSET_URL=${ASSET_URL:-/}
       - FORCE_HTTPS=true
       - APP_TIMEZONE=Asia/Jakarta
       - APP_LOCALE=id
