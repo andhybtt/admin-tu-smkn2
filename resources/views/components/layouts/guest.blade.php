@@ -21,7 +21,19 @@
             display: inline-block;
             flex-shrink: 0;
         }
-    </style>
+    <!-- Fallback CDN: Ensures styling works instantly even if Vite fails on Dokploy -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 800: '#1e40af', 900: '#1e3a8a' }
+                    }
+                }
+            }
+        }
+    </script>
 </head>
 <body class="flex h-full flex-col font-sans text-slate-800 bg-slate-50">
     <div class="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
