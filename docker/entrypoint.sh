@@ -70,6 +70,8 @@ if [ -n "$DB_HOST" ] && [ "$DB_HOST" != "127.0.0.1" ]; then
         echo "✅ Terhubung ke database MySQL/MariaDB dengan sukses!"
         echo "📦 Menjalankan migrasi database..."
         php artisan migrate --force --no-interaction || true
+        echo "🌱 Menjalankan seeder database (demo data)..."
+        php artisan db:seed --force --no-interaction || true
     fi
 fi
 

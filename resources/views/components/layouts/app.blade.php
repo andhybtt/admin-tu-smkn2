@@ -110,9 +110,15 @@
                         TU
                     </div>
                     <div class="min-w-0 flex-1">
-                        <p class="truncate text-xs font-semibold text-slate-800">Petugas Tata Usaha</p>
-                        <p class="truncate text-[10px] text-slate-400">SMKN Karanganyar</p>
+                        <p class="truncate text-xs font-semibold text-slate-800">{{ auth()->user()->name ?? 'Guest' }}</p>
+                        <p class="truncate text-[10px] text-slate-400 capitalize">{{ auth()->user()->role ?? 'Unknown' }}</p>
                     </div>
+                    <form method="POST" action="{{ route('logout') }}" class="shrink-0">
+                        @csrf
+                        <button type="submit" class="p-2 text-slate-400 hover:text-red-600 transition" title="Logout">
+                            <x-lucide-log-out class="h-4 w-4" />
+                        </button>
+                    </form>
                 </div>
             </div>
         </aside>
