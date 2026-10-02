@@ -14,6 +14,16 @@
     <!-- Tailwind & Livewire Assets -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
+
+    <!-- Fallback Inline Style: Memaksa SVG agar tidak membesar jika CSS eksternal gagal di-load -->
+    <style>
+        svg {
+            max-width: 1.5rem;
+            max-height: 1.5rem;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+    </style>
 </head>
 <body class="flex h-full flex-col font-sans text-slate-800 selection:bg-blue-600 selection:text-white" x-data="{ sidebarOpen: false }">
 
