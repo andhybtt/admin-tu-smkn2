@@ -1,110 +1,149 @@
-<div class="min-h-screen flex items-center justify-center bg-slate-900 relative overflow-hidden px-4 w-full">
-    <!-- Animated Background Gradients -->
-    <div class="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] bg-blue-600 rounded-full mix-blend-screen filter blur-[100px] opacity-40 animate-pulse"></div>
-    <div class="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-indigo-600 rounded-full mix-blend-screen filter blur-[120px] opacity-40 animate-pulse" style="animation-delay: 2s;"></div>
+<div class="min-h-screen flex w-full bg-white sm:bg-slate-50 font-sans">
+    
+    <!-- Left Panel: Brand & Welcome (Hidden on Mobile) -->
+    <div class="hidden lg:flex lg:w-1/2 bg-blue-700 relative overflow-hidden flex-col justify-between p-12">
+        <!-- Abstract Background Pattern -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden opacity-20 pointer-events-none">
+            <svg class="absolute -top-24 -left-24 w-96 h-96 text-white" fill="currentColor" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50"></circle></svg>
+            <svg class="absolute bottom-[-10%] right-[-5%] w-[40rem] h-[40rem] text-blue-900" fill="currentColor" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50"></circle></svg>
+        </div>
 
-    <div class="relative w-full max-w-md z-10">
-        <!-- Glass Card -->
-        <div class="bg-slate-800/40 backdrop-blur-2xl border border-white/10 rounded-3xl p-8 sm:p-10 shadow-2xl">
-            <!-- Logo & Brand -->
-            <div class="text-center mb-8">
-                <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/30 mb-5 border border-white/20">
-                    <x-lucide-school class="w-8 h-8" />
-                </div>
-                <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">SIM Tata Usaha</h1>
-                <p class="text-blue-200 text-sm mt-2 font-medium">SMK Negeri Karanganyar</p>
+        <div class="relative z-10 flex items-center gap-3">
+            <div class="bg-white p-2.5 rounded-xl shadow-lg">
+                <x-lucide-school class="h-8 w-8 text-blue-700" />
+            </div>
+            <span class="text-white font-bold text-xl tracking-wide">SMKN Karanganyar</span>
+        </div>
+
+        <div class="relative z-10 mb-10">
+            <h1 class="text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-4">
+                Sistem Informasi<br>Administrasi TU
+            </h1>
+            <p class="text-blue-100 text-lg max-w-md">
+                Layanan administrasi sekolah terpadu, cepat, dan transparan untuk seluruh warga sekolah.
+            </p>
+        </div>
+
+        <div class="relative z-10 flex items-center gap-4 text-blue-200 text-sm font-medium">
+            <div class="flex items-center gap-1.5"><x-lucide-check-circle class="w-4 h-4" /> <span>Efisien</span></div>
+            <div class="flex items-center gap-1.5"><x-lucide-check-circle class="w-4 h-4" /> <span>Real-time</span></div>
+            <div class="flex items-center gap-1.5"><x-lucide-check-circle class="w-4 h-4" /> <span>Akurat</span></div>
+        </div>
+    </div>
+
+    <!-- Right Panel: Login Form -->
+    <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 relative">
+        <!-- Mobile Logo (Hidden on Desktop) -->
+        <div class="absolute top-8 left-6 sm:left-12 lg:hidden flex items-center gap-3">
+            <div class="bg-blue-600 p-2 rounded-xl shadow-md">
+                <x-lucide-school class="h-6 w-6 text-white" />
+            </div>
+            <span class="text-slate-800 font-bold text-lg">SIM TU</span>
+        </div>
+
+        <div class="w-full max-w-md space-y-8 mt-12 lg:mt-0">
+            <div>
+                <h2 class="text-3xl font-bold tracking-tight text-slate-900">Selamat Datang 👋</h2>
+                <p class="mt-2 text-sm text-slate-500">
+                    Silakan masuk ke akun Anda untuk melanjutkan.
+                </p>
             </div>
 
-            <!-- Login Form -->
-            <form wire:submit="authenticate" class="space-y-5">
+            <form wire:submit="authenticate" class="space-y-6">
                 @if (session()->has('error'))
-                    <div class="bg-red-500/20 border border-red-500/50 text-red-100 px-4 py-3 rounded-xl text-sm text-center backdrop-blur-sm animate-pulse">
-                        {{ session('error') }}
+                    <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg flex items-start gap-3">
+                        <x-lucide-alert-circle class="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+                        <p class="text-sm text-red-700 font-medium">{{ session('error') }}</p>
                     </div>
                 @endif
 
-                <div class="space-y-4">
-                    <!-- Input Email/Username -->
+                <div class="space-y-5">
+                    <!-- Username Input -->
                     <div>
-                        <label for="login" class="block text-sm font-medium text-blue-100 mb-1.5 ml-1">Username / Email</label>
-                        <div class="relative group">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-blue-400 transition-colors">
+                        <label for="login" class="block text-sm font-semibold leading-6 text-slate-900 mb-1.5">Username / Email</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                                 <x-lucide-user class="h-5 w-5" />
                             </div>
                             <input wire:model="login" id="login" type="text" required autofocus
-                                class="block w-full pl-11 pr-4 py-3.5 bg-slate-900/50 border border-white/10 rounded-xl text-white placeholder-slate-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-slate-900/80 transition-all outline-none"
+                                class="block w-full pl-11 pr-4 py-3 rounded-xl border-0 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 transition-all"
                                 placeholder="Masukkan username">
                         </div>
-                        @error('login') <span class="text-red-400 text-xs mt-1.5 block ml-1 font-medium">{{ $message }}</span> @enderror
+                        @error('login') <span class="text-red-500 text-xs font-medium mt-1.5 block">{{ $message }}</span> @enderror
                     </div>
 
-                    <!-- Input Password -->
+                    <!-- Password Input -->
                     <div>
-                        <label for="password" class="block text-sm font-medium text-blue-100 mb-1.5 ml-1">Kata Sandi</label>
-                        <div class="relative group">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-blue-400 transition-colors">
+                        <label for="password" class="block text-sm font-semibold leading-6 text-slate-900 mb-1.5">Kata Sandi</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                                 <x-lucide-lock class="h-5 w-5" />
                             </div>
                             <input wire:model="password" id="password" type="password" required
-                                class="block w-full pl-11 pr-4 py-3.5 bg-slate-900/50 border border-white/10 rounded-xl text-white placeholder-slate-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-slate-900/80 transition-all outline-none"
+                                class="block w-full pl-11 pr-4 py-3 rounded-xl border-0 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 transition-all"
                                 placeholder="••••••••">
                         </div>
-                        @error('password') <span class="text-red-400 text-xs mt-1.5 block ml-1 font-medium">{{ $message }}</span> @enderror
+                        @error('password') <span class="text-red-500 text-xs font-medium mt-1.5 block">{{ $message }}</span> @enderror
                     </div>
                 </div>
 
                 <!-- Remember Me -->
-                <div class="flex items-center justify-between pt-1">
+                <div class="flex items-center justify-between">
                     <label class="flex items-center gap-2 cursor-pointer group">
                         <div class="relative flex items-center">
                             <input wire:model="remember" type="checkbox" class="peer sr-only">
-                            <div class="w-5 h-5 border-2 border-slate-500 rounded bg-transparent peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-all"></div>
+                            <div class="w-5 h-5 border border-slate-300 rounded bg-white peer-checked:bg-blue-600 peer-checked:border-blue-600 transition-all"></div>
                             <x-lucide-check class="absolute inset-0 w-5 h-5 text-white opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none scale-75 peer-checked:scale-100" />
                         </div>
-                        <span class="text-sm text-slate-300 group-hover:text-white transition-colors">Ingat saya</span>
+                        <span class="text-sm text-slate-600 font-medium select-none">Ingat saya</span>
                     </label>
                 </div>
 
                 <!-- Submit Button -->
-                <button type="submit" class="w-full relative overflow-hidden group bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:from-blue-500 hover:to-indigo-500 transition-all active:scale-[0.98] mt-2 border border-white/10">
-                    <span class="relative flex items-center justify-center gap-2" wire:loading.remove wire:target="authenticate">
-                        Masuk ke Sistem <x-lucide-arrow-right class="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <button type="submit" class="w-full flex justify-center items-center gap-2 rounded-xl bg-blue-600 px-4 py-3.5 text-sm font-bold text-white shadow-md hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-all active:scale-[0.98]">
+                    <span wire:loading.remove wire:target="authenticate" class="flex items-center gap-2">
+                        Masuk ke Sistem <x-lucide-arrow-right class="w-4 h-4" />
                     </span>
-                    <span class="relative flex items-center justify-center gap-2" wire:loading wire:target="authenticate">
+                    <span wire:loading wire:target="authenticate" class="flex items-center gap-2">
                         <x-lucide-refresh-cw class="w-5 h-5 animate-spin" /> Memproses...
                     </span>
                 </button>
             </form>
-        </div>
 
-        <!-- Role Credentials Helper (For Development) -->
-        <div class="mt-8 bg-slate-800/30 backdrop-blur-md border border-white/5 rounded-2xl p-5 text-sm text-slate-300 shadow-xl">
-            <h3 class="font-bold text-white mb-4 text-center flex items-center justify-center gap-2 text-xs uppercase tracking-widest">
-                <x-lucide-info class="w-4 h-4 text-blue-400" /> Panduan Akses Demo
-            </h3>
-            <div class="grid grid-cols-2 gap-3">
-                <div class="bg-slate-900/50 p-3 rounded-xl border border-white/5 hover:border-white/10 transition-colors cursor-default text-center">
-                    <span class="block text-[10px] uppercase tracking-wider text-blue-400 mb-1">Siswa</span>
-                    <span class="font-mono text-white text-xs font-semibold">subyek</span>
+            <!-- Role Credentials Helper (For Development) -->
+            <div class="mt-10 bg-blue-50/50 rounded-2xl p-5 border border-blue-100">
+                <h3 class="font-bold text-blue-900 mb-3 text-xs uppercase tracking-wider flex items-center gap-2">
+                    <x-lucide-info class="w-4 h-4 text-blue-600" /> Info Akun Demo
+                </h3>
+                <div class="grid grid-cols-2 gap-3 text-sm">
+                    <div class="bg-white p-2.5 rounded-lg border border-blue-50 shadow-sm">
+                        <span class="block text-[10px] uppercase text-slate-400 mb-0.5">Siswa</span>
+                        <span class="font-bold text-slate-700">subyek</span>
+                    </div>
+                    <div class="bg-white p-2.5 rounded-lg border border-blue-50 shadow-sm">
+                        <span class="block text-[10px] uppercase text-slate-400 mb-0.5">Staf TU</span>
+                        <span class="font-bold text-slate-700">petugas</span>
+                    </div>
+                    <div class="bg-white p-2.5 rounded-lg border border-blue-50 shadow-sm">
+                        <span class="block text-[10px] uppercase text-slate-400 mb-0.5">Ka. TU</span>
+                        <span class="font-bold text-slate-700">kepala_tu</span>
+                    </div>
+                    <div class="bg-white p-2.5 rounded-lg border border-blue-50 shadow-sm">
+                        <span class="block text-[10px] uppercase text-slate-400 mb-0.5">Kurikulum</span>
+                        <span class="font-bold text-slate-700">kurikulum</span>
+                    </div>
+                    <div class="bg-white p-2.5 rounded-lg border border-blue-50 shadow-sm col-span-2 text-center">
+                        <span class="block text-[10px] uppercase text-slate-400 mb-0.5">Kepala Sekolah / Admin</span>
+                        <span class="font-bold text-slate-700">kepala_sekolah / admin</span>
+                    </div>
                 </div>
-                <div class="bg-slate-900/50 p-3 rounded-xl border border-white/5 hover:border-white/10 transition-colors cursor-default text-center">
-                    <span class="block text-[10px] uppercase tracking-wider text-blue-400 mb-1">Staf TU</span>
-                    <span class="font-mono text-white text-xs font-semibold">petugas</span>
-                </div>
-                <div class="bg-slate-900/50 p-3 rounded-xl border border-white/5 hover:border-white/10 transition-colors cursor-default text-center">
-                    <span class="block text-[10px] uppercase tracking-wider text-blue-400 mb-1">Kepala TU</span>
-                    <span class="font-mono text-white text-xs font-semibold">kepala_tu</span>
-                </div>
-                <div class="bg-slate-900/50 p-3 rounded-xl border border-white/5 hover:border-white/10 transition-colors cursor-default text-center">
-                    <span class="block text-[10px] uppercase tracking-wider text-blue-400 mb-1">Kurikulum</span>
-                    <span class="font-mono text-white text-xs font-semibold">kurikulum</span>
-                </div>
-                <div class="bg-slate-900/50 p-3 rounded-xl border border-white/5 hover:border-white/10 transition-colors cursor-default text-center col-span-2">
-                    <span class="block text-[10px] uppercase tracking-wider text-blue-400 mb-1">Kepala Sekolah / Admin</span>
-                    <span class="font-mono text-white text-xs font-semibold block">kepala_sekolah / admin</span>
-                </div>
+                <p class="text-[11px] text-center mt-4 text-slate-500">Password: <strong class="text-slate-800 bg-white px-1.5 py-0.5 rounded border border-slate-200">password</strong></p>
             </div>
-            <p class="text-[11px] text-center mt-4 text-slate-400 font-medium">Semua akun menggunakan password: <strong class="text-white bg-slate-700/50 px-2 py-0.5 rounded ml-1 font-mono">password</strong></p>
+            
+            <!-- Footer -->
+            <p class="text-center text-xs text-slate-400 mt-8">
+                &copy; {{ date('Y') }} SMK Negeri Karanganyar. All rights reserved.
+            </p>
         </div>
     </div>
 </div>

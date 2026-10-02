@@ -36,10 +36,8 @@
         }
     </script>
 </head>
-<body class="flex h-full flex-col font-sans text-slate-800 bg-slate-50">
-    <div class="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
-        {{ $slot }}
-    </div>
+<body class="font-sans text-slate-800 bg-white">
+    {{ $slot }}
     @livewireScripts
 </body>
 </html>
