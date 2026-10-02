@@ -1,16 +1,13 @@
 <?php
-
 namespace App\Livewire\Kesiswaan;
-
 use Livewire\Component;
 use Livewire\Attributes\Title;
-
-#[Title('Keuangan — SMKN Karanganyar')]
-class Keuangan extends Component
-{
-    public function render()
-    {
-        return view('livewire.kesiswaan.keuangan');
+use Livewire\WithPagination;
+use App\Models\SiswaKeuangan;
+#[Title("Keuangan & Beasiswa")]
+class Keuangan extends Component {
+    use WithPagination;
+    public function render() {
+        return view("livewire.kesiswaan.keuangan", ["records" => SiswaKeuangan::with("siswa")->latest()->paginate(10)]);
     }
 }
-
