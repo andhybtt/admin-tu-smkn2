@@ -144,13 +144,6 @@
                         <p class="truncate text-xs font-semibold text-slate-800">{{ auth()->user()->name ?? 'Guest' }}</p>
                         <p class="truncate text-[10px] text-slate-400 capitalize">{{ auth()->user()->role ?? 'Unknown' }}</p>
                     </div>
-                    <form method="POST" action="{{ route('logout') }}" class="shrink-0">
-                        @csrf
-                        <button type="submit" class="flex items-center gap-1 p-2 text-red-500 hover:text-red-700 font-bold transition rounded-lg hover:bg-red-50 border border-transparent hover:border-red-100" title="Logout">
-                            <x-lucide-log-out class="h-4 w-4" />
-                            <span class="text-xs uppercase tracking-wider">Keluar</span>
-                        </button>
-                    </form>
                 </div>
             </div>
         </aside>
@@ -176,10 +169,18 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-3">
-                    <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700 border border-emerald-200/50">
+                    <span class="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700 border border-emerald-200/50">
                         <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                         Livewire SPA
                     </span>
+                    <div class="h-6 w-px bg-slate-200 hidden sm:block"></div>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="flex items-center gap-1.5 rounded-lg bg-red-50 px-3 py-1.5 text-xs font-bold text-red-600 transition hover:bg-red-100 hover:text-red-700 border border-red-100/50">
+                            <x-lucide-log-out class="h-4 w-4" />
+                            <span>Keluar</span>
+                        </button>
+                    </form>
                 </div>
             </header>
 
@@ -227,10 +228,17 @@
             <x-lucide-graduation-cap class="h-5 w-5" />
             <span>Buku Induk</span>
         </a>
-        <a href="{{ route('kesiswaan.legalisir') }}" wire:navigate.hover class="flex flex-col items-center gap-1 text-[10px] {{ request()->routeIs('kesiswaan.legalisir*') ? 'text-blue-600 font-bold' : 'text-slate-500' }}">
+        <a href="{{ route('kesiswaan.legalisir') }}" wire:navigate.hover class="hidden sm:flex flex-col items-center gap-1 text-[10px] {{ request()->routeIs('kesiswaan.legalisir*') ? 'text-blue-600 font-bold' : 'text-slate-500' }}">
             <x-lucide-award class="h-5 w-5" />
             <span>Legalisir</span>
         </a>
+        <form method="POST" action="{{ route('logout') }}" class="flex flex-col items-center justify-center">
+            @csrf
+            <button type="submit" class="flex flex-col items-center gap-1 text-[10px] text-red-500 font-bold">
+                <x-lucide-log-out class="h-5 w-5" />
+                <span>Keluar</span>
+            </button>
+        </form>
         @endif
     </nav>
 
