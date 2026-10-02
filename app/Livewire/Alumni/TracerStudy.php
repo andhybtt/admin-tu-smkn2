@@ -10,6 +10,7 @@ class TracerStudy extends Component
 {
     public function render()
     {
-        return view('livewire.alumni.t-ra-ce-rs-tu-dy');
+        return view('livewire.alumni.tracer-study');
     }
 }
+

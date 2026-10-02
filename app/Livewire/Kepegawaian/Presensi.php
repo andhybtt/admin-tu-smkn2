@@ -10,6 +10,7 @@ class Presensi extends Component
 {
     public function render()
     {
-        return view('livewire.kepegawaian.p-re-se-ns-i');
+        return view('livewire.kepegawaian.presensi');
     }
 }
+

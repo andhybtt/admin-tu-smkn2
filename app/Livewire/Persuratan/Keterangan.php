@@ -10,6 +10,7 @@ class Keterangan extends Component
 {
     public function render()
     {
-        return view('livewire.persuratan.k-et-er-an-ga-n');
+        return view('livewire.persuratan.keterangan');
     }
 }
+

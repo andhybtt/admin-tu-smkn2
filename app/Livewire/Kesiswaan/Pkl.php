@@ -10,6 +10,7 @@ class Pkl extends Component
 {
     public function render()
     {
-        return view('livewire.kesiswaan.p-kl');
+        return view('livewire.kesiswaan.pkl');
     }
 }
+

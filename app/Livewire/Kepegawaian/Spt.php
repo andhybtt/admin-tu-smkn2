@@ -10,6 +10,7 @@ class Spt extends Component
 {
     public function render()
     {
-        return view('livewire.kepegawaian.s-pt');
+        return view('livewire.kepegawaian.spt');
     }
 }
+

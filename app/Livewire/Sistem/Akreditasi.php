@@ -10,6 +10,7 @@ class Akreditasi extends Component
 {
     public function render()
     {
-        return view('livewire.sistem.a-kr-ed-it-as-i');
+        return view('livewire.sistem.akreditasi');
     }
 }
+

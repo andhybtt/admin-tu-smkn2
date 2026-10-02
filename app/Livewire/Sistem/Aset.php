@@ -10,6 +10,7 @@ class Aset extends Component
 {
     public function render()
     {
-        return view('livewire.sistem.a-se-t');
+        return view('livewire.sistem.aset');
     }
 }
+

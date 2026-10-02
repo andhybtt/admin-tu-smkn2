@@ -10,6 +10,7 @@ class Dapodik extends Component
 {
     public function render()
     {
-        return view('livewire.sistem.d-ap-od-ik');
+        return view('livewire.sistem.dapodik');
     }
 }
+

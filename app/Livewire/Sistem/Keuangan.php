@@ -10,6 +10,7 @@ class Keuangan extends Component
 {
     public function render()
     {
-        return view('livewire.sistem.k-eu-an-ga-n');
+        return view('livewire.sistem.keuangan');
     }
 }
+
