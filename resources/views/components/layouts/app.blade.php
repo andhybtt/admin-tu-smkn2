@@ -76,11 +76,11 @@
                 <div class="pt-4 pb-1">
                     <p class="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-400">Identitas & Akademik</p>
                 </div>
-                <a href="#" class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition text-slate-600 hover:bg-slate-100">
+                <a href="{{ route('kesiswaan.buku-induk') }}" wire:navigate.hover class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition {{ request()->routeIs('kesiswaan.buku-induk*') ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-600 hover:bg-slate-100' }}">
                     <x-lucide-user class="h-5 w-5" />
                     <span>Profil Saya (Buku Induk)</span>
                 </a>
-                <a href="#" class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition text-slate-600 hover:bg-slate-100">
+                <a href="{{ route('kesiswaan.keuangan') }}" wire:navigate.hover class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition {{ request()->routeIs('kesiswaan.keuangan*') ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-600 hover:bg-slate-100' }}">
                     <x-lucide-wallet class="h-5 w-5" />
                     <span>Keuangan & Beasiswa</span>
                 </a>
@@ -88,19 +88,19 @@
                 <div class="pt-4 pb-1">
                     <p class="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-400">Administrasi & Surat</p>
                 </div>
-                <a href="#" class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition text-slate-600 hover:bg-slate-100">
+                <a href="{{ route('persuratan.keterangan') }}" wire:navigate.hover class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition {{ request()->routeIs('persuratan.keterangan*') ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-600 hover:bg-slate-100' }}">
                     <x-lucide-file-text class="h-5 w-5" />
                     <span>Minta Surat Keterangan</span>
                 </a>
-                <a href="#" class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition text-slate-600 hover:bg-slate-100">
+                <a href="{{ route('kesiswaan.pkl') }}" wire:navigate.hover class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition {{ request()->routeIs('kesiswaan.pkl*') ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-600 hover:bg-slate-100' }}">
                     <x-lucide-briefcase class="h-5 w-5" />
                     <span>Pengurusan Izin PKL</span>
                 </a>
-                <a href="#" class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition text-slate-600 hover:bg-slate-100">
+                <a href="{{ route('kesiswaan.legalisir') }}" wire:navigate.hover class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition {{ request()->routeIs('kesiswaan.legalisir*') ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-600 hover:bg-slate-100' }}">
                     <x-lucide-award class="h-5 w-5" />
                     <span>Legalisir & SKPI</span>
                 </a>
-                <a href="#" class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition text-slate-600 hover:bg-slate-100">
+                <a href="{{ route('alumni.tracer-study') }}" wire:navigate.hover class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition {{ request()->routeIs('alumni.tracer-study*') ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-600 hover:bg-slate-100' }}">
                     <x-lucide-graduation-cap class="h-5 w-5" />
                     <span>Tracer Study BKK</span>
                 </a>
@@ -112,11 +112,11 @@
                     <x-lucide-users class="h-5 w-5" />
                     <span>Buku Induk & Mutasi</span>
                 </a>
-                <a href="#" class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition text-slate-600 hover:bg-slate-100">
+                <a href="{{ route('kesiswaan.keuangan') }}" wire:navigate.hover class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition {{ request()->routeIs('kesiswaan.keuangan*') ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-600 hover:bg-slate-100' }}">
                     <x-lucide-wallet class="h-5 w-5" />
                     <span>Keuangan & KIP/PIP</span>
                 </a>
-                <a href="#" class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition text-slate-600 hover:bg-slate-100">
+                <a href="{{ route('kesiswaan.pkl') }}" wire:navigate.hover class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition {{ request()->routeIs('kesiswaan.pkl*') ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-600 hover:bg-slate-100' }}">
                     <x-lucide-briefcase class="h-5 w-5" />
                     <span>PKL & Uji Kompetensi</span>
                 </a>
@@ -128,7 +128,7 @@
                     <x-lucide-award class="h-5 w-5" />
                     <span>Legalisir & SKPI</span>
                 </a>
-                <a href="#" class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition text-slate-600 hover:bg-slate-100">
+                <a href="{{ route('alumni.tracer-study') }}" wire:navigate.hover class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition {{ request()->routeIs('alumni.tracer-study*') ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-600 hover:bg-slate-100' }}">
                     <x-lucide-graduation-cap class="h-5 w-5" />
                     <span>Tracer Study & BKK</span>
                 </a>
@@ -140,11 +140,11 @@
                     <x-lucide-user-check class="h-5 w-5" />
                     <span>Data Pegawai & Karier</span>
                 </a>
-                <a href="#" class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition text-slate-600 hover:bg-slate-100">
+                <a href="{{ route('kepegawaian.presensi') }}" wire:navigate.hover class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition {{ request()->routeIs('kepegawaian.presensi*') ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-600 hover:bg-slate-100' }}">
                     <x-lucide-calendar-clock class="h-5 w-5" />
                     <span>Presensi & e-Kinerja</span>
                 </a>
-                <a href="#" class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition text-slate-600 hover:bg-slate-100">
+                <a href="{{ route('kepegawaian.spt') }}" wire:navigate.hover class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition {{ request()->routeIs('kepegawaian.spt*') ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-600 hover:bg-slate-100' }}">
                     <x-lucide-plane class="h-5 w-5" />
                     <span>Perjalanan Dinas (SPT)</span>
                 </a>
@@ -160,7 +160,7 @@
                     <x-lucide-send class="h-5 w-5" />
                     <span>Surat Keluar</span>
                 </a>
-                <a href="#" class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition text-slate-600 hover:bg-slate-100">
+                <a href="{{ route('persuratan.keterangan') }}" wire:navigate.hover class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition {{ request()->routeIs('persuratan.keterangan*') ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-600 hover:bg-slate-100' }}">
                     <x-lucide-file-signature class="h-5 w-5" />
                     <span>Keterangan & Pengantar</span>
                 </a>
@@ -168,19 +168,19 @@
                 <div class="pt-4 pb-1">
                     <p class="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-400">5. Kebijakan & Sistem</p>
                 </div>
-                <a href="#" class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition text-slate-600 hover:bg-slate-100">
+                <a href="{{ route('sistem.dapodik') }}" wire:navigate.hover class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition {{ request()->routeIs('sistem.dapodik*') ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-600 hover:bg-slate-100' }}">
                     <x-lucide-database class="h-5 w-5" />
                     <span>Data Pokok (Dapodik)</span>
                 </a>
-                <a href="#" class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition text-slate-600 hover:bg-slate-100">
+                <a href="{{ route('sistem.keuangan') }}" wire:navigate.hover class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition {{ request()->routeIs('sistem.keuangan*') ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-600 hover:bg-slate-100' }}">
                     <x-lucide-calculator class="h-5 w-5" />
                     <span>Keuangan (RKAS/BOS)</span>
                 </a>
-                <a href="#" class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition text-slate-600 hover:bg-slate-100">
+                <a href="{{ route('sistem.aset') }}" wire:navigate.hover class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition {{ request()->routeIs('sistem.aset*') ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-600 hover:bg-slate-100' }}">
                     <x-lucide-box class="h-5 w-5" />
                     <span>Aset & Inventaris</span>
                 </a>
-                <a href="#" class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition text-slate-600 hover:bg-slate-100">
+                <a href="{{ route('sistem.akreditasi') }}" wire:navigate.hover class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition {{ request()->routeIs('sistem.akreditasi*') ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-600 hover:bg-slate-100' }}">
                     <x-lucide-handshake class="h-5 w-5" />
                     <span>Akreditasi & MoU DUDI</span>
                 </a>
