@@ -20,13 +20,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Enforce HTTPS behind Cloudflare Tunnel or Reverse Proxy if requested or forwarded
+        // Enforce HTTPS and Root URL behind Cloudflare Tunnel or Reverse Proxy
         if (
             isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https'
             || env('FORCE_HTTPS', false)
             || app()->environment('production')
         ) {
             URL::forceScheme('https');
+            URL::forceRootUrl(env('APP_URL', 'https://simtu.sknddev.com'));
         }
     }
 }

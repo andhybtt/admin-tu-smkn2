@@ -59,6 +59,23 @@
                     <span>Dashboard</span>
                 </a>
 
+                @if(auth()->check() && auth()->user()->role === 'subyek')
+                <div class="pt-4 pb-1">
+                    <p class="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-400">Layanan Siswa</p>
+                </div>
+                <a href="#" class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition text-slate-600 hover:bg-slate-100">
+                    <x-lucide-file-text class="h-5 w-5" />
+                    <span>Permohonan Surat</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition text-slate-600 hover:bg-slate-100">
+                    <x-lucide-award class="h-5 w-5" />
+                    <span>Legalisir Online</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition text-slate-600 hover:bg-slate-100">
+                    <x-lucide-user class="h-5 w-5" />
+                    <span>Profil Siswa</span>
+                </a>
+                @else
                 <div class="pt-4 pb-1">
                     <p class="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-400">Persuratan & Arsip</p>
                 </div>
@@ -101,6 +118,7 @@
                     <x-lucide-award class="h-5 w-5" />
                     <span>Legalisir Ijazah</span>
                 </a>
+                @endif
             </nav>
 
             <!-- Profil Staf TU -->
@@ -164,6 +182,20 @@
             <x-lucide-layout-dashboard class="h-5 w-5" />
             <span>Beranda</span>
         </a>
+        @if(auth()->check() && auth()->user()->role === 'subyek')
+        <a href="#" class="flex flex-col items-center gap-1 text-[10px] text-slate-500">
+            <x-lucide-file-text class="h-5 w-5" />
+            <span>Surat</span>
+        </a>
+        <a href="#" class="flex flex-col items-center gap-1 text-[10px] text-slate-500">
+            <x-lucide-award class="h-5 w-5" />
+            <span>Legalisir</span>
+        </a>
+        <a href="#" class="flex flex-col items-center gap-1 text-[10px] text-slate-500">
+            <x-lucide-user class="h-5 w-5" />
+            <span>Profil</span>
+        </a>
+        @else
         <a href="{{ route('persuratan.masuk') }}" wire:navigate.hover class="flex flex-col items-center gap-1 text-[10px] {{ request()->routeIs('persuratan.masuk*') ? 'text-blue-600 font-bold' : 'text-slate-500' }}">
             <x-lucide-inbox class="h-5 w-5" />
             <span>Surat Masuk</span>
@@ -182,6 +214,7 @@
             <x-lucide-award class="h-5 w-5" />
             <span>Legalisir</span>
         </a>
+        @endif
     </nav>
 
     @livewireScripts

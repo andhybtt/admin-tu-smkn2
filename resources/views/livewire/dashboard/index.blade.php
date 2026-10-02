@@ -1,11 +1,66 @@
 <div class="space-y-6">
+    @if(auth()->check() && auth()->user()->role === 'subyek')
+    <!-- Dashboard Khusus Siswa (Subyek) -->
+    <div class="rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-600 p-6 text-white shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+            <span class="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-3 py-1 text-xs font-medium backdrop-blur-sm">
+                <x-lucide-user class="h-3.5 w-3.5" /> Portal Siswa
+            </span>
+            <h2 class="mt-2 text-xl sm:text-2xl font-bold">Halo, {{ auth()->user()->name }}</h2>
+            <p class="text-xs sm:text-sm text-blue-50 mt-1">Layanan permohonan surat dan legalisir ijazah secara online.</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Pengajuan Surat Aktif -->
+        <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-sm font-bold text-slate-800">Status Permohonan</h3>
+                <span class="rounded-lg bg-blue-50 p-2 text-blue-600">
+                    <x-lucide-activity class="h-4 w-4" />
+                </span>
+            </div>
+            <div class="flex flex-col items-center justify-center py-6 text-center">
+                <div class="rounded-full bg-slate-50 p-4 mb-3">
+                    <x-lucide-check-circle class="h-8 w-8 text-emerald-500" />
+                </div>
+                <p class="text-sm font-medium text-slate-900">Belum ada permohonan aktif</p>
+                <p class="text-xs text-slate-500 mt-1">Surat yang Anda ajukan akan tampil di sini.</p>
+            </div>
+        </div>
+
+        <!-- Menu Layanan Siswa -->
+        <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <h3 class="text-sm font-bold text-slate-800 mb-4">Layanan Administrasi</h3>
+            <div class="grid grid-cols-2 gap-3">
+                <a href="#" class="flex flex-col items-center justify-center p-4 rounded-xl border border-slate-100 bg-slate-50/60 hover:bg-blue-50/50 hover:border-blue-200 transition group text-center">
+                    <div class="p-3 rounded-full bg-blue-100 text-blue-700 group-hover:scale-110 transition">
+                        <x-lucide-file-text class="h-5 w-5" />
+                    </div>
+                    <span class="mt-2 text-xs font-bold text-slate-700">Minta Surat</span>
+                    <span class="text-[10px] text-slate-400">Keterangan Aktif</span>
+                </a>
+
+                <a href="#" class="flex flex-col items-center justify-center p-4 rounded-xl border border-slate-100 bg-slate-50/60 hover:bg-amber-50/50 hover:border-amber-200 transition group text-center">
+                    <div class="p-3 rounded-full bg-amber-100 text-amber-700 group-hover:scale-110 transition">
+                        <x-lucide-award class="h-5 w-5" />
+                    </div>
+                    <span class="mt-2 text-xs font-bold text-slate-700">Legalisir</span>
+                    <span class="text-[10px] text-slate-400">Pengajuan Ijazah</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    @else
+    <!-- Dashboard Staf TU (Existing) -->
     <!-- Banner Sambutan -->
     <div class="rounded-2xl bg-gradient-to-r from-blue-700 to-indigo-800 p-6 text-white shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
             <span class="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-medium backdrop-blur-sm">
                 <x-lucide-school class="h-3.5 w-3.5" /> SMKN Karanganyar
             </span>
-            <h2 class="mt-2 text-xl sm:text-2xl font-bold">Halo, Staf Tata Usaha</h2>
+            <h2 class="mt-2 text-xl sm:text-2xl font-bold">Halo, {{ auth()->user()->name ?? 'Staf Tata Usaha' }}</h2>
             <p class="text-xs sm:text-sm text-blue-100 mt-1">Kelola administrasi persuratan, data siswa, buku induk, dan legalisir secara terpusat.</p>
         </div>
         <div>
@@ -100,4 +155,5 @@
             </a>
         </div>
     </div>
+    @endif
 </div>

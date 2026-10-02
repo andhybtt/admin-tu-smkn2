@@ -22,6 +22,7 @@ RUN npm ci || npm install
 COPY tailwind.config.js vite.config.js ./
 COPY resources ./resources
 COPY public ./public
+COPY app ./app
 
 # Kompilasi asset produksi ke folder /public/build
 RUN npm run build
