@@ -17,9 +17,6 @@ services:
     restart: unless-stopped
     expose:
       - 80
-    ports:
-      # Port mapping untuk pengujian lokal (opsional di Dokploy)
-      - "${APP_PORT:-8080}:80"
     environment:
       - APP_NAME=${APP_NAME:-SIM TU SMKN Karanganyar}
       - APP_ENV=${APP_ENV:-production}
