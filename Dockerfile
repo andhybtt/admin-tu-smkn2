@@ -47,14 +47,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libonig-dev \
     libxml2-dev \
     libicu-dev \
+    libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # 2. Konfigurasi & install ekstensi PHP yang dibutuhkan Laravel, Livewire & Scan Dokumen
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) \
         pdo \
-        pdo_mysql \
-        mysqli \
+        pdo_pgsql \
+        pgsql \
         mbstring \
         exif \
         pcntl \

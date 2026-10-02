@@ -30,9 +30,9 @@ services:
       - APP_FALLBACK_LOCALE=id
       
       # Database Configuration (Mengarah ke hostname unik db_tu_smkn)
-      - DB_CONNECTION=mysql
+      - DB_CONNECTION=pgsql
       - DB_HOST=db_tu_smkn
-      - DB_PORT=3306
+      - DB_PORT=5432
       - DB_DATABASE=${DB_DATABASE:-tu_smkn_karanganyar}
       - DB_USERNAME=${DB_USERNAME:-tu_user}
       - DB_PASSWORD=${DB_PASSWORD:-PasswordDatabaseTu123!}
@@ -54,23 +54,21 @@ services:
       - tu_internal_net  # Jalur privat ke Database (Terisolasi dari project lain)
 
   # ----------------------------------------------------------------------------
-  # Service 2: Database Server (MariaDB 10.11 LTS)
+  # Service 2: Database Server (PostgreSQL 16)
   # Menggunakan service name unik 'db_tu_smkn' agar kebal bentrok DNS Dokploy
   # ----------------------------------------------------------------------------
   db_tu_smkn:
-    image: mariadb:10.11
+    image: postgres:16-alpine
     container_name: tu_smkn_db
     restart: unless-stopped
-    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-PasswordRootTuKuat123!}
-      MYSQL_DATABASE: ${DB_DATABASE:-tu_smkn_karanganyar}
-      MYSQL_USER: ${DB_USERNAME:-tu_user}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-PasswordDatabaseTu123!}
+      POSTGRES_DB: ${DB_DATABASE:-tu_smkn_karanganyar}
+      POSTGRES_USER: ${DB_USERNAME:-tu_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-PasswordDatabaseTu123!}
     volumes:
-      - db_data:/var/lib/mysql
+      - db_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-tu_user} -d ${DB_DATABASE:-tu_smkn_karanganyar}"]
       interval: 10s
       timeout: 5s
       retries: 5

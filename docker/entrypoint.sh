@@ -38,17 +38,17 @@ fi
 
 # 4. Tunggu koneksi database jika DB_HOST dikonfigurasi
 if [ -n "$DB_HOST" ] && [ "$DB_HOST" != "127.0.0.1" ]; then
-    echo "⏳ Menunggu database di $DB_HOST:${DB_PORT:-3306} siap..."
+    echo "⏳ Menunggu database di $DB_HOST:${DB_PORT:-5432} siap..."
     max_retries=30
     counter=0
     until php -r "
         \$h = getenv('DB_HOST') ?: 'db_tu_smkn';
-        \$p = getenv('DB_PORT') ?: '3306';
+        \$p = getenv('DB_PORT') ?: '5432';
         \$d = getenv('DB_DATABASE') ?: 'tu_smkn_karanganyar';
         \$u = getenv('DB_USERNAME') ?: 'tu_user';
         \$w = getenv('DB_PASSWORD') ?: '';
         try {
-            new PDO(\"mysql:host=\$h;port=\$p;dbname=\$d\", \$u, \$w, [PDO::ATTR_TIMEOUT => 3]);
+            new PDO(\"pgsql:host=\$h;port=\$p;dbname=\$d\", \$u, \$w, [PDO::ATTR_TIMEOUT => 3]);
             exit(0);
         } catch (\Exception \$e) {
             echo \$e->getMessage();
@@ -67,7 +67,7 @@ if [ -n "$DB_HOST" ] && [ "$DB_HOST" != "127.0.0.1" ]; then
         fi
     done
     if [ $counter -lt $max_retries ]; then
-        echo "✅ Terhubung ke database MySQL/MariaDB dengan sukses!"
+        echo "✅ Terhubung ke database PostgreSQL dengan sukses!"
         echo "📦 Menjalankan migrasi database..."
         php artisan migrate --force --no-interaction || true
         echo "🌱 Menjalankan seeder database (demo data)..."
