@@ -1,10 +1,50 @@
-<div class="p-6 sm:p-10 space-y-6 flex flex-col items-center justify-center text-center min-h-[60vh]">
-    <div class="inline-flex p-5 rounded-3xl bg-gradient-to-br from-blue-100 to-indigo-50 text-blue-600 mb-2 shadow-inner border border-white">
-        <x-lucide-layout-template class="w-12 h-12" />
+<div class="space-y-4">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+        <div class="flex items-center gap-4">
+            <div class="h-12 w-12 bg-pink-100 rounded-xl flex items-center justify-center text-pink-600">
+                <x-lucide-file-signature class="h-6 w-6" />
+            </div>
+            <div>
+                <h2 class="text-xl font-bold text-slate-900">Keterangan & Pengantar</h2>
+                <p class="text-xs text-slate-500 mt-0.5">Permohonan surat keterangan aktif, kelakuan baik, dsb.</p>
+            </div>
+        </div>
     </div>
-    <div>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-800">Modul Keterangan</h2>
-        <p class="text-slate-500 mt-2 max-w-md mx-auto">Antarmuka pengguna (UI) untuk modul ini telah disiapkan. Fitur backend sedang dalam tahap pengembangan aktif.</p>
+
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs text-slate-600 whitespace-nowrap">
+                <thead class="border-b border-slate-200 bg-slate-50/75 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                    <tr>
+                        <th class="px-5 py-4">Nama Pemohon (NIS/NIP)</th>
+                        <th class="px-5 py-4">Jenis Surat</th>
+                        <th class="px-5 py-4">Keperluan</th>
+                        <th class="px-5 py-4">Status Berkas</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    @forelse($records as $r)
+                        <tr class="hover:bg-pink-50/30 transition group">
+                            <td class="px-5 py-3 font-bold text-slate-800">
+                                {{ $r->nama_pemohon }}
+                                <p class="text-[10px] text-slate-400 mt-0.5 font-normal">{{ $r->nis_nip ?? '-' }}</p>
+                            </td>
+                            <td class="px-5 py-3">
+                                <span class="font-semibold text-pink-700">{{ ucfirst(str_replace('_', ' ', $r->jenis_surat)) }}</span>
+                            </td>
+                            <td class="px-5 py-3 text-slate-500">{{ $r->keperluan }}</td>
+                            <td class="px-5 py-3">
+                                <span class="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-bold text-slate-700 border border-slate-200">{{ ucfirst($r->status_berkas) }}</span>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="4" class="px-5 py-12 text-center text-slate-400">Belum ada permohonan surat.</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+        @if($records->hasPages())
+        <div class="px-5 py-3 border-t border-slate-100 bg-slate-50">{{ $records->links(data: ['scrollTo' => false]) }}</div>
+        @endif
     </div>
-    <a href="/" wire:navigate.hover class="px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl shadow-lg transition active:scale-95">Kembali ke Dashboard</a>
 </div>

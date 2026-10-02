@@ -8,6 +8,7 @@ class DatabaseSeeder extends Seeder {
             UserSeeder::class,
             SiswaSeeder::class,
             Batch1Seeder::class,
+            Batch2Seeder::class,
         ]);
     }
 }
