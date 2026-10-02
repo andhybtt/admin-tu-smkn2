@@ -9,6 +9,7 @@ class DatabaseSeeder extends Seeder {
             SiswaSeeder::class,
             Batch1Seeder::class,
             Batch2Seeder::class,
+            Batch3Seeder::class,
         ]);
     }
 }

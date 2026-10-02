@@ -1,16 +1,13 @@
 <?php
-
 namespace App\Livewire\Sistem;
-
 use Livewire\Component;
 use Livewire\Attributes\Title;
-
-#[Title('Dapodik — SMKN Karanganyar')]
-class Dapodik extends Component
-{
-    public function render()
-    {
-        return view('livewire.sistem.dapodik');
+use Livewire\WithPagination;
+use App\Models\Dapodik;
+#[Title("Data Pokok (Dapodik)")]
+class Dapodik extends Component {
+    use WithPagination;
+    public function render() {
+        return view("livewire.sistem.dapodik", ["records" => Dapodik::latest()->paginate(10)]);
     }
 }
-

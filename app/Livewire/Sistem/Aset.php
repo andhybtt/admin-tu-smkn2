@@ -1,16 +1,13 @@
 <?php
-
 namespace App\Livewire\Sistem;
-
 use Livewire\Component;
 use Livewire\Attributes\Title;
-
-#[Title('Aset — SMKN Karanganyar')]
-class Aset extends Component
-{
-    public function render()
-    {
-        return view('livewire.sistem.aset');
+use Livewire\WithPagination;
+use App\Models\Aset;
+#[Title("Aset & Inventaris")]
+class Aset extends Component {
+    use WithPagination;
+    public function render() {
+        return view("livewire.sistem.aset", ["records" => \App\Models\Aset::latest()->paginate(10)]);
     }
 }
-
