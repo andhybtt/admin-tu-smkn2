@@ -71,7 +71,7 @@
                         Masuk ke Sistem <x-lucide-arrow-right class="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </span>
                     <span class="relative flex items-center justify-center gap-2" wire:loading wire:target="authenticate">
-                        <x-lucide-loader-2 class="w-5 h-5 animate-spin" /> Memproses...
+                        <x-lucide-refresh-cw class="w-5 h-5 animate-spin" /> Memproses...
                     </span>
                 </button>
             </form>
