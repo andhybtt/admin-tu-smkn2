@@ -23,6 +23,7 @@
             display: inline-block;
             flex-shrink: 0;
         }
+    </style>
     <!-- Fallback CDN: Ensures styling works instantly even if Vite fails on Dokploy -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
