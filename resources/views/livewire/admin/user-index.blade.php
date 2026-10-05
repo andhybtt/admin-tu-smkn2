@@ -84,7 +84,7 @@
                     <x-lucide-search class="h-4 w-4" />
                 </div>
                 <input type="search" wire:model.live.debounce.300ms="search" id="cari-pengguna"
-                    placeholder="Cari nama, username, atau email..."
+                    placeholder="Cari nama, username/NISN, NIS, kelas, atau email..."
                     class="block w-full rounded-lg border-0 py-2.5 pl-9 pr-3 text-sm text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-blue-600">
             </div>
             <select wire:model.live="roleFilter" id="filter-peran"
@@ -101,7 +101,8 @@
                 <thead class="bg-slate-50/70 text-left text-[11px] font-bold uppercase tracking-wider text-slate-500">
                     <tr>
                         <th class="px-4 py-3">Pengguna</th>
-                        <th class="px-4 py-3">Username</th>
+                        <th class="px-4 py-3">Username / NISN</th>
+                        <th class="px-4 py-3">NIS</th>
                         <th class="px-4 py-3">Peran</th>
                         <th class="px-4 py-3">Dibuat</th>
                         <th class="px-4 py-3 text-right">Aksi</th>
@@ -126,7 +127,26 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="px-4 py-3 font-mono text-xs text-slate-600">{{ $user->username ?? '—' }}</td>
+                            <td class="px-4 py-3 font-mono text-xs text-slate-600">
+                                {{ $user->username ?? '—' }}
+                                @if($user->role === 'subyek')
+                                    <span class="block text-[10px] text-slate-400 font-sans">NISN</span>
+                                @endif
+                            </td>
+                            <td class="px-4 py-3 font-mono text-xs">
+                                @if ($user->siswa?->nis)
+                                    <div class="flex flex-col">
+                                        <span class="font-semibold text-slate-800 bg-slate-100 px-2 py-0.5 rounded w-fit text-xs">{{ $user->siswa->nis }}</span>
+                                        @if ($user->siswa->kelas_sekarang)
+                                            <span class="text-[10px] text-blue-600 font-sans mt-0.5">{{ $user->siswa->kelas_sekarang }}</span>
+                                        @endif
+                                    </div>
+                                @elseif ($user->role === 'subyek')
+                                    <span class="text-amber-600 text-[11px] italic">Belum diisi</span>
+                                @else
+                                    <span class="text-slate-300">—</span>
+                                @endif
+                            </td>
                             <td class="px-4 py-3">
                                 <span class="inline-flex rounded-full px-2.5 py-1 text-[11px] font-semibold ring-1 ring-inset {{ $badge[$user->role] ?? $badge['subyek'] }}">
                                     {{ $roles[$user->role] ?? $user->role }}
@@ -152,7 +172,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-4 py-12 text-center text-sm text-slate-400">
+                            <td colspan="6" class="px-4 py-12 text-center text-sm text-slate-400">
                                 Tidak ada pengguna yang cocok dengan pencarian.
                             </td>
                         </tr>
@@ -193,14 +213,17 @@
 
                     <div class="grid gap-4 sm:grid-cols-2">
                         <div>
-                            <label for="f-username" class="mb-1 block text-xs font-semibold text-slate-900">Username</label>
+                            <label for="f-username" class="mb-1 block text-xs font-semibold text-slate-900">
+                                {{ $role === 'subyek' ? 'Username (NISN)' : 'Username' }}
+                            </label>
                             <input id="f-username" type="text" wire:model="username" autocomplete="off"
+                                placeholder="{{ $role === 'subyek' ? 'Nomor NISN Siswa' : 'Username pengguna' }}"
                                 class="block w-full rounded-lg border-0 px-3 py-2.5 text-sm shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-blue-600">
                             @error('username') <span class="mt-1 block text-[11px] font-medium text-red-500">{{ $message }}</span> @enderror
                         </div>
                         <div>
                             <label for="f-role" class="mb-1 block text-xs font-semibold text-slate-900">Peran</label>
-                            <select id="f-role" wire:model="role"
+                            <select id="f-role" wire:model.live="role"
                                 class="block w-full rounded-lg border-0 px-3 py-2.5 text-sm shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-blue-600">
                                 @foreach ($roles as $key => $label)
                                     <option value="{{ $key }}">{{ $label }}</option>
@@ -209,6 +232,34 @@
                             @error('role') <span class="mt-1 block text-[11px] font-medium text-red-500">{{ $message }}</span> @enderror
                         </div>
                     </div>
+
+                    @if ($role === 'subyek')
+                        <div class="rounded-xl bg-blue-50/70 border border-blue-200/80 p-3.5 space-y-3">
+                            <div class="flex items-center gap-1.5 text-blue-900 font-bold text-xs">
+                                <x-lucide-graduation-cap class="w-4 h-4 text-blue-600 shrink-0" />
+                                <span>Data Khusus Siswa (NIS & Kelas)</span>
+                            </div>
+                            <div class="grid gap-3 sm:grid-cols-2">
+                                <div>
+                                    <label for="f-nis" class="mb-1 block text-xs font-semibold text-slate-900">
+                                        NIS <span class="text-blue-600 font-normal">(Password default siswa)</span>
+                                    </label>
+                                    <input id="f-nis" type="text" wire:model="nis" placeholder="Contoh: 12345001"
+                                        class="block w-full rounded-lg border-0 px-3 py-2.5 text-sm shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 bg-white">
+                                    @error('nis') <span class="mt-1 block text-[11px] font-medium text-red-500">{{ $message }}</span> @enderror
+                                </div>
+                                <div>
+                                    <label for="f-kelas" class="mb-1 block text-xs font-semibold text-slate-900">Kelas Sekarang</label>
+                                    <input id="f-kelas" type="text" wire:model="kelas" placeholder="Contoh: XII RPL 1"
+                                        class="block w-full rounded-lg border-0 px-3 py-2.5 text-sm shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 bg-white">
+                                    @error('kelas') <span class="mt-1 block text-[11px] font-medium text-red-500">{{ $message }}</span> @enderror
+                                </div>
+                            </div>
+                            <p class="text-[11px] text-blue-800 leading-relaxed">
+                                📌 <strong>Login Siswa:</strong> Username menggunakan <strong>NISN</strong> dan kata sandi default menggunakan <strong>NIS</strong>.
+                            </p>
+                        </div>
+                    @endif
 
                     <div>
                         <label for="f-email" class="mb-1 block text-xs font-semibold text-slate-900">Email</label>

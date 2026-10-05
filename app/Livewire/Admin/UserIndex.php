@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin;
 
+use App\Models\Siswa;
 use App\Models\User;
 use App\Services\SiswaCsv;
 use Illuminate\Support\Str;
@@ -36,6 +37,8 @@ class UserIndex extends Component
     public string $email = '';
     public string $role = 'petugas';
     public string $password = '';
+    public string $nis = '';
+    public string $kelas = '';
 
     public bool $showImport = false;
     public $importFile = null;
@@ -64,7 +67,7 @@ class UserIndex extends Component
 
     public function edit(int $id): void
     {
-        $user = User::findOrFail($id);
+        $user = User::with('siswa')->findOrFail($id);
 
         $this->resetForm();
         $this->editingId = $user->id;
@@ -72,6 +75,8 @@ class UserIndex extends Component
         $this->username = (string) $user->username;
         $this->email = $user->email;
         $this->role = $user->role;
+        $this->nis = (string) ($user->siswa?->nis ?? Siswa::where('nisn', $user->username)->value('nis') ?? '');
+        $this->kelas = (string) ($user->siswa?->kelas_sekarang ?? Siswa::where('nisn', $user->username)->value('kelas_sekarang') ?? '');
         $this->showForm = true;
     }
 
@@ -148,15 +153,27 @@ class UserIndex extends Component
     {
         $isEdit = $this->editingId !== null;
 
-        $data = $this->validate([
+        $rules = [
             'name'     => ['required', 'string', 'max:100'],
             'username' => ['required', 'string', 'max:50', Rule::unique('users', 'username')->ignore($this->editingId)],
             'email'    => ['required', 'email', 'max:150', Rule::unique('users', 'email')->ignore($this->editingId)],
             'role'     => ['required', Rule::in(array_keys(self::ROLES))],
-            'password' => [$isEdit ? 'nullable' : 'required', 'string', 'min:6', 'max:100'],
-        ], [], [
+            'password' => [$isEdit ? 'nullable' : ($this->role === 'subyek' ? 'nullable' : 'required'), 'string', 'min:6', 'max:100'],
+        ];
+
+        if ($this->role === 'subyek') {
+            $rules['nis'] = ['required', 'string', 'max:30'];
+            $rules['kelas'] = ['nullable', 'string', 'max:50'];
+        }
+
+        $data = $this->validate($rules, [], [
             'name' => 'nama', 'username' => 'username', 'email' => 'email', 'role' => 'peran', 'password' => 'kata sandi',
+            'nis' => 'NIS', 'kelas' => 'kelas',
         ]);
+
+        if (!$isEdit && $data['role'] === 'subyek' && empty($data['password'])) {
+            $data['password'] = $this->nis;
+        }
 
         if ($isEdit) {
             $user = User::findOrFail($this->editingId);
@@ -167,15 +184,56 @@ class UserIndex extends Component
                 return;
             }
 
-            if ($data['password'] === '') {
+            if (empty($data['password'])) {
                 unset($data['password']);
             }
 
-            $user->update($data);
+            $user->update([
+                'name' => $data['name'],
+                'username' => $data['username'],
+                'email' => $data['email'],
+                'role' => $data['role'],
+                ...(!empty($data['password']) ? ['password' => $data['password']] : []),
+            ]);
             session()->flash('success', "Data pengguna {$user->name} berhasil diperbarui.");
         } else {
-            $user = User::create($data);
+            $user = User::create([
+                'name' => $data['name'],
+                'username' => $data['username'],
+                'email' => $data['email'],
+                'role' => $data['role'],
+                'password' => $data['password'] ?? $this->nis,
+            ]);
             session()->flash('success', "Pengguna {$user->name} berhasil ditambahkan.");
+        }
+
+        // Sinkronkan data Siswa jika perannya siswa (subyek)
+        if ($user->role === 'subyek' && !empty($this->nis)) {
+            $siswa = Siswa::withTrashed()->where('user_id', $user->id)->first()
+                ?? Siswa::withTrashed()->where('nisn', $user->username)->first()
+                ?? Siswa::withTrashed()->where('nis', $this->nis)->first();
+
+            if ($siswa) {
+                if ($siswa->trashed()) {
+                    $siswa->restore();
+                }
+                $siswa->update([
+                    'user_id' => $user->id,
+                    'nis' => $this->nis,
+                    'nisn' => $user->username,
+                    'nama_lengkap' => $user->name,
+                    'kelas_sekarang' => $this->kelas ?: $siswa->kelas_sekarang,
+                ]);
+            } else {
+                Siswa::create([
+                    'user_id' => $user->id,
+                    'nis' => $this->nis,
+                    'nisn' => $user->username,
+                    'nama_lengkap' => $user->name,
+                    'kelas_sekarang' => $this->kelas,
+                    'status' => 'aktif',
+                ]);
+            }
         }
 
         $this->closeForm();
@@ -197,7 +255,7 @@ class UserIndex extends Component
 
     private function resetForm(): void
     {
-        $this->reset(['editingId', 'name', 'username', 'email', 'password']);
+        $this->reset(['editingId', 'name', 'username', 'email', 'password', 'nis', 'kelas']);
         $this->role = 'petugas';
         $this->resetValidation();
     }
@@ -205,12 +263,18 @@ class UserIndex extends Component
     public function render()
     {
         $users = User::query()
+            ->with('siswa')
             ->when($this->search !== '', function ($q) {
                 $term = '%' . strtolower($this->search) . '%';
                 $q->where(function ($q) use ($term) {
                     $q->whereRaw('LOWER(name) LIKE ?', [$term])
                         ->orWhereRaw('LOWER(username) LIKE ?', [$term])
-                        ->orWhereRaw('LOWER(email) LIKE ?', [$term]);
+                        ->orWhereRaw('LOWER(email) LIKE ?', [$term])
+                        ->orWhereHas('siswa', function ($sq) use ($term) {
+                            $sq->whereRaw('LOWER(nis) LIKE ?', [$term])
+                                ->orWhereRaw('LOWER(nisn) LIKE ?', [$term])
+                                ->orWhereRaw('LOWER(kelas_sekarang) LIKE ?', [$term]);
+                        });
                 });
             })
             ->when($this->roleFilter !== '', fn ($q) => $q->where('role', $this->roleFilter))
