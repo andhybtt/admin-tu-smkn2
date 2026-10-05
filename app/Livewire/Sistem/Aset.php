@@ -3,7 +3,6 @@ namespace App\Livewire\Sistem;
 use Livewire\Component;
 use Livewire\Attributes\Title;
 use Livewire\WithPagination;
-use App\Models\Aset;
 #[Title("Aset & Inventaris")]
 class Aset extends Component {
     use WithPagination;
