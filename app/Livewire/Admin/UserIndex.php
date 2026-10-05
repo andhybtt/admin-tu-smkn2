@@ -28,6 +28,7 @@ class UserIndex extends Component
 
     public string $search = '';
     public string $roleFilter = '';
+    public int $perPage = 10;
 
     public bool $showForm = false;
     public ?int $editingId = null;
@@ -57,6 +58,11 @@ class UserIndex extends Component
     }
 
     public function updatingRoleFilter(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatingPerPage(): void
     {
         $this->resetPage();
     }
@@ -291,7 +297,7 @@ class UserIndex extends Component
             ->when($this->roleFilter !== '', fn ($q) => $q->where('role', $this->roleFilter))
             ->orderByRaw("CASE role WHEN 'admin' THEN 0 WHEN 'kepala_sekolah' THEN 1 WHEN 'kepala_tu' THEN 2 WHEN 'kurikulum' THEN 3 WHEN 'petugas' THEN 4 ELSE 5 END")
             ->orderBy('name')
-            ->paginate(10);
+            ->paginate(in_array($this->perPage, [10, 20, 50, 100]) ? $this->perPage : 10);
 
         $counts = User::selectRaw('role, COUNT(*) as total')->groupBy('role')->pluck('total', 'role');
 

@@ -87,13 +87,25 @@
                     placeholder="Cari nama, username/NISN, NIS, kelas, atau email..."
                     class="block w-full rounded-lg border-0 py-2.5 pl-9 pr-3 text-sm text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-blue-600">
             </div>
-            <select wire:model.live="roleFilter" id="filter-peran"
-                class="block rounded-lg border-0 py-2.5 pl-3 pr-8 text-sm text-slate-700 shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:w-52">
-                <option value="">Semua Peran</option>
-                @foreach ($roles as $key => $label)
-                    <option value="{{ $key }}">{{ $label }}</option>
-                @endforeach
-            </select>
+            <div class="flex items-center gap-2">
+                <select wire:model.live="roleFilter" id="filter-peran"
+                    class="block rounded-lg border-0 py-2.5 pl-3 pr-8 text-sm text-slate-700 shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:w-48">
+                    <option value="">Semua Peran</option>
+                    @foreach ($roles as $key => $label)
+                        <option value="{{ $key }}">{{ $label }}</option>
+                    @endforeach
+                </select>
+                <div class="flex items-center gap-1.5">
+                    <span class="hidden text-xs text-slate-400 sm:inline">Tampil:</span>
+                    <select wire:model.live="perPage" id="filter-per-page"
+                        class="block rounded-lg border-0 py-2.5 pl-3 pr-8 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-blue-600">
+                        <option value="10">10 data</option>
+                        <option value="20">20 data</option>
+                        <option value="50">50 data</option>
+                        <option value="100">100 data</option>
+                    </select>
+                </div>
+            </div>
         </div>
 
         <div class="overflow-x-auto">
@@ -205,8 +217,15 @@
             </table>
         </div>
 
-        @if ($users->hasPages())
-            <div class="border-t border-slate-100 p-4">{{ $users->links() }}</div>
+        @if ($users->total() > 0)
+            <div class="flex flex-col gap-3 border-t border-slate-100 p-4 sm:flex-row sm:items-center sm:justify-between text-xs text-slate-500">
+                <div>
+                    Menampilkan <span class="font-semibold text-slate-700">{{ $users->firstItem() ?? 0 }}</span> sampai <span class="font-semibold text-slate-700">{{ $users->lastItem() ?? 0 }}</span> dari <span class="font-semibold text-slate-700">{{ $users->total() }}</span> pengguna
+                </div>
+                <div>
+                    {{ $users->links() }}
+                </div>
+            </div>
         @endif
     </div>
 
