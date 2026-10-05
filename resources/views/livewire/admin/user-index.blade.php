@@ -17,11 +17,28 @@
             <h1 class="text-xl font-bold tracking-tight text-slate-900">Manajemen Pengguna</h1>
             <p class="mt-0.5 text-sm text-slate-500">Kelola akun, peran, dan kata sandi seluruh pemakai sistem.</p>
         </div>
-        <button type="button" wire:click="create" id="btn-tambah-pengguna"
-            class="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm shadow-blue-500/20 transition hover:bg-blue-700 active:scale-[0.98]">
-            <x-lucide-user-plus class="h-4 w-4" />
-            Tambah Pengguna
-        </button>
+        <div class="flex flex-wrap items-center gap-2">
+            <button type="button" wire:click="downloadTemplate" id="btn-unduh-template" wire:loading.attr="disabled" wire:target="downloadTemplate"
+                class="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-3.5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm ring-1 ring-inset ring-slate-300 transition hover:bg-slate-50 disabled:opacity-60">
+                <x-lucide-file-text class="h-4 w-4" />
+                Template CSV
+            </button>
+            <button type="button" wire:click="exportSiswa" id="btn-ekspor-siswa" wire:loading.attr="disabled" wire:target="exportSiswa"
+                class="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-3.5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm ring-1 ring-inset ring-slate-300 transition hover:bg-slate-50 disabled:opacity-60">
+                <x-lucide-download class="h-4 w-4" />
+                Unduh Data Siswa
+            </button>
+            <button type="button" wire:click="openImport" id="btn-impor-siswa"
+                class="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-3.5 py-2.5 text-sm font-bold text-white shadow-sm shadow-emerald-500/20 transition hover:bg-emerald-700 active:scale-[0.98]">
+                <x-lucide-upload class="h-4 w-4" />
+                Impor Siswa
+            </button>
+            <button type="button" wire:click="create" id="btn-tambah-pengguna"
+                class="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm shadow-blue-500/20 transition hover:bg-blue-700 active:scale-[0.98]">
+                <x-lucide-user-plus class="h-4 w-4" />
+                Tambah Pengguna
+            </button>
+        </div>
     </div>
 
     <!-- Flash -->
@@ -233,6 +250,103 @@
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+    @endif
+
+    <!-- Modal Impor Siswa -->
+    @if ($showImport)
+        <div class="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/50 p-0 backdrop-blur-sm sm:items-center sm:p-4"
+            x-data x-on:keydown.escape.window="$wire.closeImport()">
+            <div class="flex max-h-[92vh] w-full max-w-xl flex-col rounded-t-2xl bg-white shadow-2xl sm:rounded-2xl"
+                x-data="{ uploading: false, progress: 0 }"
+                x-on:livewire-upload-start="uploading = true; progress = 0"
+                x-on:livewire-upload-finish="uploading = false"
+                x-on:livewire-upload-error="uploading = false"
+                x-on:livewire-upload-progress="progress = $event.detail.progress">
+                <div class="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+                    <div>
+                        <h2 class="text-base font-bold text-slate-900">Impor Data Siswa (CSV)</h2>
+                        <p class="text-xs text-slate-500">Data siswa dan akun login dibuat sekaligus.</p>
+                    </div>
+                    <button type="button" wire:click="closeImport" class="text-slate-400 hover:text-slate-600" aria-label="Tutup">
+                        <x-lucide-x class="h-5 w-5" />
+                    </button>
+                </div>
+
+                <div class="space-y-4 overflow-y-auto px-5 py-5">
+                    @if ($importResult === null)
+                        <div class="rounded-xl border border-blue-100 bg-blue-50/60 p-3.5 text-xs leading-relaxed text-slate-600">
+                            <p class="mb-1.5 font-bold text-blue-800">Petunjuk</p>
+                            <ul class="list-disc space-y-1 pl-4">
+                                <li>Unduh <button type="button" wire:click="downloadTemplate" class="font-semibold text-blue-700 underline">Template CSV</button>, isi data, lalu unggah kembali. <strong>Hapus baris contoh.</strong></li>
+                                <li>Kolom: No, Nama, NISN, NIS, Kelas, Nama Orang Tua, Alamat Orang Tua, No HP Murid, No HP Orang Tua, Pekerjaan Orang Tua, Keterangan.</li>
+                                <li><strong>NISN</strong>, <strong>NIS</strong>, dan <strong>Nama</strong> wajib diisi.</li>
+                                <li>Akun login siswa: username = <strong>NISN</strong>, kata sandi awal = <strong>NIS</strong>.</li>
+                                <li>Siswa dengan NIS yang sudah ada akan <strong>diperbarui</strong>, bukan digandakan. Kolom kosong tidak menimpa data lama.</li>
+                                <li>Pemisah kolom <code>;</code> atau <code>,</code> dikenali otomatis. Simpan dari Excel sebagai <em>CSV UTF-8</em>.</li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <label for="file-impor" class="mb-1 block text-xs font-semibold text-slate-900">File CSV</label>
+                            <input id="file-impor" type="file" wire:model="importFile" accept=".csv,.txt,text/csv"
+                                class="block w-full cursor-pointer rounded-lg text-sm text-slate-600 ring-1 ring-inset ring-slate-300 file:mr-3 file:cursor-pointer file:border-0 file:bg-slate-100 file:px-4 file:py-2.5 file:text-sm file:font-semibold file:text-slate-700 hover:file:bg-slate-200">
+                            <div x-show="uploading" x-cloak class="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
+                                <div class="h-full rounded-full bg-emerald-500 transition-all" x-bind:style="`width: ${progress}%`"></div>
+                            </div>
+                            @error('importFile') <span class="mt-1 block text-[11px] font-medium text-red-500">{{ $message }}</span> @enderror
+                        </div>
+                    @else
+                        <div class="grid grid-cols-3 gap-2 text-center">
+                            <div class="rounded-xl bg-emerald-50 p-3">
+                                <p class="text-xl font-bold text-emerald-700">{{ $importResult['created'] }}</p>
+                                <p class="text-[11px] font-medium text-emerald-700">Ditambahkan</p>
+                            </div>
+                            <div class="rounded-xl bg-blue-50 p-3">
+                                <p class="text-xl font-bold text-blue-700">{{ $importResult['updated'] }}</p>
+                                <p class="text-[11px] font-medium text-blue-700">Diperbarui</p>
+                            </div>
+                            <div class="rounded-xl {{ count($importResult['errors']) ? 'bg-red-50' : 'bg-slate-50' }} p-3">
+                                <p class="text-xl font-bold {{ count($importResult['errors']) ? 'text-red-600' : 'text-slate-500' }}">{{ count($importResult['errors']) }}</p>
+                                <p class="text-[11px] font-medium {{ count($importResult['errors']) ? 'text-red-600' : 'text-slate-500' }}">Gagal</p>
+                            </div>
+                        </div>
+                        @if ($importResult['skipped'])
+                            <p class="text-xs text-slate-500">{{ $importResult['skipped'] }} baris contoh dilewati.</p>
+                        @endif
+
+                        @if (count($importResult['errors']))
+                            <div class="rounded-xl border border-red-100 bg-red-50/50 p-3">
+                                <p class="mb-2 text-xs font-bold text-red-700">Baris yang gagal diproses</p>
+                                <ul class="max-h-48 space-y-1 overflow-y-auto text-xs text-red-700">
+                                    @foreach ($importResult['errors'] as $err)
+                                        <li><span class="font-semibold">Baris {{ $err['line'] }}:</span> {{ $err['message'] }}</li>
+                                    @endforeach
+                                </ul>
+                                <p class="mt-2 text-[11px] text-slate-500">Perbaiki baris tersebut lalu impor ulang. Baris yang sudah berhasil tidak akan digandakan.</p>
+                            </div>
+                        @endif
+                    @endif
+                </div>
+
+                <div class="flex justify-end gap-2 border-t border-slate-100 px-5 py-4">
+                    @if ($importResult === null)
+                        <button type="button" wire:click="closeImport"
+                            class="rounded-lg px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-100">Batal</button>
+                        <button type="button" wire:click="import" x-bind:disabled="uploading" wire:loading.attr="disabled" wire:target="import"
+                            class="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-emerald-700 active:scale-[0.98] disabled:opacity-60">
+                            <x-lucide-upload class="h-4 w-4" />
+                            <span wire:loading.remove wire:target="import">Mulai Impor</span>
+                            <span wire:loading wire:target="import">Memproses...</span>
+                        </button>
+                    @else
+                        <button type="button" wire:click="openImport"
+                            class="rounded-lg px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-100">Impor Lagi</button>
+                        <button type="button" wire:click="closeImport"
+                            class="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700">Selesai</button>
+                    @endif
+                </div>
             </div>
         </div>
     @endif

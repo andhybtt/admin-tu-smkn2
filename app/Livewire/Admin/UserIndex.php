@@ -3,16 +3,18 @@
 namespace App\Livewire\Admin;
 
 use App\Models\User;
+use App\Services\SiswaCsv;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
 #[Title('Manajemen Pengguna')]
 class UserIndex extends Component
 {
-    use WithPagination;
+    use WithPagination, WithFileUploads;
 
     public const ROLES = [
         'admin'          => 'Admin',
@@ -34,6 +36,10 @@ class UserIndex extends Component
     public string $email = '';
     public string $role = 'petugas';
     public string $password = '';
+
+    public bool $showImport = false;
+    public $importFile = null;
+    public ?array $importResult = null;
 
     public function mount(): void
     {
@@ -73,6 +79,64 @@ class UserIndex extends Component
     {
         $this->showForm = false;
         $this->resetForm();
+    }
+
+    public function downloadTemplate()
+    {
+        $this->authorizeAdmin();
+
+        return response()->streamDownload(function () {
+            $out = fopen('php://output', 'w');
+            SiswaCsv::writeTemplate($out);
+            fclose($out);
+        }, 'template-data-siswa.csv', ['Content-Type' => 'text/csv; charset=UTF-8']);
+    }
+
+    public function exportSiswa()
+    {
+        $this->authorizeAdmin();
+
+        return response()->streamDownload(function () {
+            $out = fopen('php://output', 'w');
+            SiswaCsv::writeExport($out);
+            fclose($out);
+        }, 'data-siswa-' . now()->format('Ymd-His') . '.csv', ['Content-Type' => 'text/csv; charset=UTF-8']);
+    }
+
+    public function openImport(): void
+    {
+        $this->reset(['importFile', 'importResult']);
+        $this->resetValidation('importFile');
+        $this->showImport = true;
+    }
+
+    public function closeImport(): void
+    {
+        $this->showImport = false;
+        $this->reset(['importFile', 'importResult']);
+        $this->resetValidation('importFile');
+    }
+
+    public function import(): void
+    {
+        $this->authorizeAdmin();
+
+        $this->validate([
+            'importFile' => ['required', 'file', 'mimes:csv,txt', 'max:2048'],
+        ], [
+            'importFile.required' => 'Pilih file CSV terlebih dahulu.',
+            'importFile.mimes'    => 'File harus berformat CSV.',
+            'importFile.max'      => 'Ukuran file maksimal 2 MB.',
+        ]);
+
+        $this->importResult = (new SiswaCsv())->import($this->importFile->getRealPath());
+        $this->reset('importFile');
+        $this->resetPage();
+    }
+
+    private function authorizeAdmin(): void
+    {
+        abort_unless(auth()->user()?->role === 'admin', 403);
     }
 
     public function generatePassword(): void
