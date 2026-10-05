@@ -81,10 +81,13 @@ class SiswaCsv
         fputcsv($out, $fields, self::DELIMITER);
     }
 
-    /** Paksa Excel membaca sebagai teks agar angka 0 di depan tidak hilang. */
+    /**
+     * Nilai NISN/NIS/No HP ditulis sebagai angka biasa agar mudah diisi.
+     * Angka 0 di depan yang hilang karena Excel dipulihkan saat impor.
+     */
     private static function text(?string $value): string
     {
-        return $value === null || $value === '' ? '' : '="' . $value . '"';
+        return (string) $value;
     }
 
     // ------------------------------------------------------------------
@@ -131,6 +134,12 @@ class SiswaCsv
         $nama = $row['nama'] ?? '';
         $nisn = $row['nisn'] ?? '';
         $nis = $row['nis'] ?? '';
+
+        foreach (['nisn' => 'NISN', 'nis' => 'NIS', 'hp_siswa' => 'No HP Murid', 'hp_ortu' => 'No HP Orang Tua'] as $key => $label) {
+            if (preg_match('/^\d+([.,]\d+)?e\+?\d+$/i', $row[$key] ?? '')) {
+                throw new \DomainException("Kolom {$label} (\"{$row[$key]}\") terbaca Excel sebagai notasi ilmiah. Format kolom sebagai Number (0 desimal) lalu isi ulang.");
+            }
+        }
 
         if ($nama === '') {
             throw new \DomainException('Nama wajib diisi.');
