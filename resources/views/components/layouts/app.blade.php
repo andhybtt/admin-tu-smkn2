@@ -184,6 +184,16 @@
                     <x-lucide-handshake class="h-5 w-5" />
                     <span>Akreditasi & MoU DUDI</span>
                 </a>
+
+                @if(auth()->check() && auth()->user()->role === 'admin')
+                <div class="pt-4 pb-1">
+                    <p class="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-400">6. Administrator</p>
+                </div>
+                <a href="{{ route('admin.users') }}" wire:navigate.hover class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition {{ request()->routeIs('admin.users*') ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-600 hover:bg-slate-100' }}">
+                    <x-lucide-users class="h-5 w-5" />
+                    <span>Manajemen User</span>
+                </a>
+                @endif
                 @endif
             </nav>
 

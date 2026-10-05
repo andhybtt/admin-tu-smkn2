@@ -22,6 +22,7 @@ use App\Livewire\Sistem\Dapodik;
 use App\Livewire\Sistem\Keuangan as SistemKeuangan;
 use App\Livewire\Sistem\Aset;
 use App\Livewire\Sistem\Akreditasi;
+use App\Livewire\Admin\UserIndex;
 
 Route::get('/login', Login::class)->name('login')->middleware('guest');
 Route::post('/logout', function () {
@@ -63,5 +64,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/keuangan', SistemKeuangan::class)->name('keuangan');
         Route::get('/aset', Aset::class)->name('aset');
         Route::get('/akreditasi', Akreditasi::class)->name('akreditasi');
+    });
+
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::get('/users', UserIndex::class)->name('users');
     });
 });
