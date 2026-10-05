@@ -103,6 +103,7 @@
                         <th class="px-4 py-3">Pengguna</th>
                         <th class="px-4 py-3">Username / NISN</th>
                         <th class="px-4 py-3">NIS</th>
+                        <th class="px-4 py-3">JK &amp; Agama</th>
                         <th class="px-4 py-3">Peran</th>
                         <th class="px-4 py-3">Dibuat</th>
                         <th class="px-4 py-3 text-right">Aksi</th>
@@ -147,6 +148,29 @@
                                     <span class="text-slate-300">—</span>
                                 @endif
                             </td>
+                            <td class="px-4 py-3 text-xs">
+                                @if ($user->siswa?->jenis_kelamin || $user->siswa?->agama)
+                                    <div class="flex flex-col gap-0.5">
+                                        @if ($user->siswa->jenis_kelamin)
+                                            <div class="flex items-center gap-1.5">
+                                                <span class="inline-flex items-center justify-center h-4 w-4 rounded-full text-[10px] font-bold {{ $user->siswa->jenis_kelamin === 'L' ? 'bg-blue-100 text-blue-700' : 'bg-pink-100 text-pink-700' }}">
+                                                    {{ $user->siswa->jenis_kelamin }}
+                                                </span>
+                                                <span class="text-[11px] text-slate-600 font-medium">
+                                                    {{ $user->siswa->jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan' }}
+                                                </span>
+                                            </div>
+                                        @endif
+                                        @if ($user->siswa->agama)
+                                            <span class="text-[11px] text-slate-500">{{ $user->siswa->agama }}</span>
+                                        @endif
+                                    </div>
+                                @elseif ($user->role === 'subyek')
+                                    <span class="text-slate-300 italic text-[11px]">—</span>
+                                @else
+                                    <span class="text-slate-300">—</span>
+                                @endif
+                            </td>
                             <td class="px-4 py-3">
                                 <span class="inline-flex rounded-full px-2.5 py-1 text-[11px] font-semibold ring-1 ring-inset {{ $badge[$user->role] ?? $badge['subyek'] }}">
                                     {{ $roles[$user->role] ?? $user->role }}
@@ -172,7 +196,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-4 py-12 text-center text-sm text-slate-400">
+                            <td colspan="7" class="px-4 py-12 text-center text-sm text-slate-400">
                                 Tidak ada pengguna yang cocok dengan pencarian.
                             </td>
                         </tr>
@@ -237,7 +261,7 @@
                         <div class="rounded-xl bg-blue-50/70 border border-blue-200/80 p-3.5 space-y-3">
                             <div class="flex items-center gap-1.5 text-blue-900 font-bold text-xs">
                                 <x-lucide-graduation-cap class="w-4 h-4 text-blue-600 shrink-0" />
-                                <span>Data Khusus Siswa (NIS & Kelas)</span>
+                                <span>Data Khusus Siswa (NIS, Kelas &amp; Biodata)</span>
                             </div>
                             <div class="grid gap-3 sm:grid-cols-2">
                                 <div>
@@ -253,6 +277,30 @@
                                     <input id="f-kelas" type="text" wire:model="kelas" placeholder="Contoh: XII RPL 1"
                                         class="block w-full rounded-lg border-0 px-3 py-2.5 text-sm shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 bg-white">
                                     @error('kelas') <span class="mt-1 block text-[11px] font-medium text-red-500">{{ $message }}</span> @enderror
+                                </div>
+                                <div>
+                                    <label for="f-jk" class="mb-1 block text-xs font-semibold text-slate-900">Jenis Kelamin</label>
+                                    <select id="f-jk" wire:model="jenisKelamin"
+                                        class="block w-full rounded-lg border-0 px-3 py-2.5 text-sm shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 bg-white">
+                                        <option value="">Pilih Jenis Kelamin</option>
+                                        <option value="L">L (Laki-laki)</option>
+                                        <option value="P">P (Perempuan)</option>
+                                    </select>
+                                    @error('jenisKelamin') <span class="mt-1 block text-[11px] font-medium text-red-500">{{ $message }}</span> @enderror
+                                </div>
+                                <div>
+                                    <label for="f-agama" class="mb-1 block text-xs font-semibold text-slate-900">Agama</label>
+                                    <select id="f-agama" wire:model="agama"
+                                        class="block w-full rounded-lg border-0 px-3 py-2.5 text-sm shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 bg-white">
+                                        <option value="">Pilih Agama</option>
+                                        <option value="Islam">Islam</option>
+                                        <option value="Kristen">Kristen Protestan</option>
+                                        <option value="Katolik">Katolik</option>
+                                        <option value="Hindu">Hindu</option>
+                                        <option value="Buddha">Buddha</option>
+                                        <option value="Konghucu">Konghucu</option>
+                                    </select>
+                                    @error('agama') <span class="mt-1 block text-[11px] font-medium text-red-500">{{ $message }}</span> @enderror
                                 </div>
                             </div>
                             <p class="text-[11px] text-blue-800 leading-relaxed">

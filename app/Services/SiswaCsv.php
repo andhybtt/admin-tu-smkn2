@@ -17,7 +17,7 @@ class SiswaCsv
     public const DELIMITER = ';';
 
     public const HEADERS = [
-        'No', 'Nama', 'NISN', 'NIS', 'Kelas', 'Nama Orang Tua', 'Alamat Orang Tua',
+        'No', 'Nama', 'NISN', 'NIS', 'Jenis Kelamin', 'Agama', 'Kelas', 'Nama Orang Tua', 'Alamat Orang Tua',
         'No HP Murid', 'No HP Orang Tua', 'Pekerjaan Orang Tua', 'Keterangan',
     ];
 
@@ -27,6 +27,8 @@ class SiswaCsv
         'nama' => 'nama', 'namasiswa' => 'nama', 'namamurid' => 'nama', 'namalengkap' => 'nama',
         'nisn' => 'nisn',
         'nis' => 'nis',
+        'jeniskelamin' => 'jk', 'jk' => 'jk', 'gender' => 'jk',
+        'agama' => 'agama',
         'kelas' => 'kelas',
         'namaorangtua' => 'nama_ortu', 'namaortu' => 'nama_ortu',
         'alamatorangtua' => 'alamat_ortu', 'alamatortu' => 'alamat_ortu',
@@ -47,9 +49,9 @@ class SiswaCsv
         fwrite($out, "\xEF\xBB\xBF"); // BOM UTF-8 agar Excel membaca karakter dengan benar
         self::line($out, self::HEADERS);
         self::line($out, [
-            1, 'CONTOH - hapus baris ini', self::text('0051234599'), self::text('12345099'), 'X RPL 1',
-            'Budi Contoh', 'Jl. Contoh No. 1, Karanganyar', self::text('081234567890'),
-            self::text('081298765432'), 'Wiraswasta', 'Juara 1 lomba LKS tingkat kabupaten',
+            1, 'CONTOH - hapus baris ini', '0051234599', '12345099', 'L', 'Islam', 'X RPL 1',
+            'Budi Contoh', 'Jl. Contoh No. 1, Karanganyar', '081234567890',
+            '081298765432', 'Wiraswasta', 'Juara 1 lomba LKS tingkat kabupaten',
         ]);
     }
 
@@ -65,6 +67,8 @@ class SiswaCsv
                 $s->nama_lengkap,
                 self::text($s->nisn),
                 self::text($s->nis),
+                $s->jenis_kelamin,
+                $s->agama,
                 $s->kelas_sekarang,
                 $s->nama_ayah ?: $s->nama_ibu,
                 $s->alamat_ortu,
@@ -164,9 +168,20 @@ class SiswaCsv
             throw new \DomainException("NISN {$nisn} sudah dipakai siswa lain.");
         }
 
+        $jk = strtoupper(trim($row['jk'] ?? ''));
+        if ($jk !== '' && in_array($jk, ['L', 'LAKI-LAKI', 'LAKI', 'PRIA'])) {
+            $jk = 'L';
+        } elseif ($jk !== '' && in_array($jk, ['P', 'PEREMPUAN', 'WANITA'])) {
+            $jk = 'P';
+        } else {
+            $jk = in_array($jk, ['L', 'P']) ? $jk : null;
+        }
+
         $data = array_filter([
             'nama_lengkap'     => $nama,
             'nisn'             => $nisn,
+            'jenis_kelamin'    => $jk,
+            'agama'            => $row['agama'] ?? null,
             'kelas_sekarang'   => $row['kelas'] ?? null,
             'nama_ayah'        => $row['nama_ortu'] ?? null,
             'alamat_ortu'      => $row['alamat_ortu'] ?? null,

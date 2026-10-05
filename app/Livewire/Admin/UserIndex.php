@@ -39,6 +39,8 @@ class UserIndex extends Component
     public string $password = '';
     public string $nis = '';
     public string $kelas = '';
+    public string $jenisKelamin = '';
+    public string $agama = '';
 
     public bool $showImport = false;
     public $importFile = null;
@@ -77,6 +79,8 @@ class UserIndex extends Component
         $this->role = $user->role;
         $this->nis = (string) ($user->siswa?->nis ?? Siswa::where('nisn', $user->username)->value('nis') ?? '');
         $this->kelas = (string) ($user->siswa?->kelas_sekarang ?? Siswa::where('nisn', $user->username)->value('kelas_sekarang') ?? '');
+        $this->jenisKelamin = (string) ($user->siswa?->jenis_kelamin ?? Siswa::where('nisn', $user->username)->value('jenis_kelamin') ?? '');
+        $this->agama = (string) ($user->siswa?->agama ?? Siswa::where('nisn', $user->username)->value('agama') ?? '');
         $this->showForm = true;
     }
 
@@ -164,11 +168,13 @@ class UserIndex extends Component
         if ($this->role === 'subyek') {
             $rules['nis'] = ['required', 'string', 'max:30'];
             $rules['kelas'] = ['nullable', 'string', 'max:50'];
+            $rules['jenisKelamin'] = ['nullable', 'in:L,P'];
+            $rules['agama'] = ['nullable', 'string', 'max:50'];
         }
 
         $data = $this->validate($rules, [], [
             'name' => 'nama', 'username' => 'username', 'email' => 'email', 'role' => 'peran', 'password' => 'kata sandi',
-            'nis' => 'NIS', 'kelas' => 'kelas',
+            'nis' => 'NIS', 'kelas' => 'kelas', 'jenisKelamin' => 'jenis kelamin', 'agama' => 'agama',
         ]);
 
         if (!$isEdit && $data['role'] === 'subyek' && empty($data['password'])) {
@@ -223,6 +229,8 @@ class UserIndex extends Component
                     'nisn' => $user->username,
                     'nama_lengkap' => $user->name,
                     'kelas_sekarang' => $this->kelas ?: $siswa->kelas_sekarang,
+                    'jenis_kelamin' => $this->jenisKelamin ?: $siswa->jenis_kelamin,
+                    'agama' => $this->agama ?: $siswa->agama,
                 ]);
             } else {
                 Siswa::create([
@@ -231,6 +239,8 @@ class UserIndex extends Component
                     'nisn' => $user->username,
                     'nama_lengkap' => $user->name,
                     'kelas_sekarang' => $this->kelas,
+                    'jenis_kelamin' => $this->jenisKelamin ?: null,
+                    'agama' => $this->agama ?: null,
                     'status' => 'aktif',
                 ]);
             }
@@ -255,7 +265,7 @@ class UserIndex extends Component
 
     private function resetForm(): void
     {
-        $this->reset(['editingId', 'name', 'username', 'email', 'password', 'nis', 'kelas']);
+        $this->reset(['editingId', 'name', 'username', 'email', 'password', 'nis', 'kelas', 'jenisKelamin', 'agama']);
         $this->role = 'petugas';
         $this->resetValidation();
     }
@@ -273,7 +283,8 @@ class UserIndex extends Component
                         ->orWhereHas('siswa', function ($sq) use ($term) {
                             $sq->whereRaw('LOWER(nis) LIKE ?', [$term])
                                 ->orWhereRaw('LOWER(nisn) LIKE ?', [$term])
-                                ->orWhereRaw('LOWER(kelas_sekarang) LIKE ?', [$term]);
+                                ->orWhereRaw('LOWER(kelas_sekarang) LIKE ?', [$term])
+                                ->orWhereRaw('LOWER(agama) LIKE ?', [$term]);
                         });
                 });
             })
