@@ -3,7 +3,7 @@ namespace App\Livewire\Alumni;
 use Livewire\Component;
 use Livewire\Attributes\Title;
 use Livewire\WithPagination;
-use App\Models\TracerStudy;
+
 #[Title("Tracer Study BKK")]
 class TracerStudy extends Component {
     use WithPagination;
