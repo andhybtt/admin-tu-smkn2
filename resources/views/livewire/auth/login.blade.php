@@ -75,13 +75,20 @@
                     <!-- Password Input -->
                     <div>
                         <label for="password" class="block text-xs font-semibold leading-6 text-slate-900 mb-1">Kata Sandi</label>
-                        <div class="relative">
+                        <div class="relative" x-data="{ show: false }">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
                                 <x-lucide-lock class="h-4 w-4" />
                             </div>
-                            <input wire:model="password" id="password" type="password" required
-                                class="block w-full pl-9 pr-3 py-2.5 rounded-lg border-0 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 transition-all"
+                            <input wire:model="password" id="password" x-bind:type="show ? 'text' : 'password'" type="password" required
+                                class="block w-full pl-9 pr-10 py-2.5 rounded-lg border-0 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 transition-all"
                                 placeholder="••••••••">
+                            <button type="button" x-on:click="show = !show"
+                                x-bind:aria-label="show ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'"
+                                x-bind:title="show ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'"
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-blue-600 focus:outline-none focus-visible:text-blue-600 transition-colors">
+                                <x-lucide-eye x-show="!show" class="h-4 w-4" />
+                                <x-lucide-eye-off x-show="show" x-cloak class="h-4 w-4" />
+                            </button>
                         </div>
                         @error('password') <span class="text-red-500 text-[11px] font-medium mt-1 block">{{ $message }}</span> @enderror
                     </div>
@@ -109,20 +116,6 @@
                 </button>
             </form>
 
-            <!-- Compact Role Credentials Helper -->
-            <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-100">
-                <div class="flex items-center justify-center gap-1.5 mb-2.5">
-                    <x-lucide-info class="w-3.5 h-3.5 text-blue-500" />
-                    <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Info Akun Demo (Pass: password)</span>
-                </div>
-                <div class="flex flex-wrap justify-center gap-1.5">
-                    <span class="text-[10px] bg-white border border-slate-200 px-2 py-1 rounded-md text-slate-600"><strong class="text-slate-800">Siswa:</strong> subyek</span>
-                    <span class="text-[10px] bg-white border border-slate-200 px-2 py-1 rounded-md text-slate-600"><strong class="text-slate-800">TU:</strong> petugas</span>
-                    <span class="text-[10px] bg-white border border-slate-200 px-2 py-1 rounded-md text-slate-600"><strong class="text-slate-800">Ka.TU:</strong> kepala_tu</span>
-                    <span class="text-[10px] bg-white border border-slate-200 px-2 py-1 rounded-md text-slate-600"><strong class="text-slate-800">Kuri:</strong> kurikulum</span>
-                    <span class="text-[10px] bg-white border border-slate-200 px-2 py-1 rounded-md text-slate-600"><strong class="text-slate-800">Admin:</strong> admin</span>
-                </div>
-            </div>
             
             <!-- Footer -->
             <p class="text-center text-[10px] text-slate-400">
